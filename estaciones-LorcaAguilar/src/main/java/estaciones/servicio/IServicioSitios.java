@@ -1,10 +1,13 @@
 package estaciones.servicio;
 
-import estaciones.modelo.ResumenSitio;
+import java.util.LinkedList;
+
+import estaciones.modelo.SitioTuristico;
 
 public interface IServicioSitios {
 
-	ResumenSitio getSitios(String coordenadas);
-	
-	
+	LinkedList<ResumenSitio> getSitios(String coordenadas);
+
+	SitioTuristico getInfoSitio(String id);
+
 }

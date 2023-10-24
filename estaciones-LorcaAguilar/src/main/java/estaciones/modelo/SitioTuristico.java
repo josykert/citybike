@@ -2,6 +2,7 @@ package estaciones.modelo;
 
 import java.util.LinkedList;
 
+import estaciones.servicio.ResumenSitio;
 import repositorio.Identificable;
 
 public class SitioTuristico implements Identificable {

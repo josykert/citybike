@@ -1,4 +1,4 @@
-package estaciones.modelo;
+package estaciones.servicio;
 
 public class ResumenSitio {
 

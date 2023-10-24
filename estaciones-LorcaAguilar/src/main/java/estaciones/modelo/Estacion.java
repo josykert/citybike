@@ -16,12 +16,12 @@ public class Estacion implements Identificable{
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
 
-	public Estacion(String nombre, int puestos, String codigoPostal, String coordenadas, LocalDate fechaAlta) {
+	public Estacion(String nombre, int puestos, String codigoPostal, String coordenadas) {
 		this.nombre = nombre;
 		this.puestos = puestos;
 		this.codigoPostal = codigoPostal;
 		this.coordenadas = coordenadas;
-		this.fechaAlta = fechaAlta;
+		this.fechaAlta = LocalDate.now();
 		this.sitios = new LinkedList<SitioTuristico>();
 	}
 
