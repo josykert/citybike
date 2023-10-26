@@ -18,7 +18,7 @@ public class RepositorioMemoria<T extends Identificable> implements RepositorioS
 
 	private HashMap<String, T> entidades = new HashMap<>();
 	
-	private int id = 1; // asigna secuencialmente los identificadores
+	private int id = 0; // asigna secuencialmente los identificadores
 	
 	@Override
 	public String add(T entity) {

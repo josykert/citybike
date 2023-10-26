@@ -13,10 +13,7 @@ public class SitioTuristico implements Identificable {
 	private List<String> categorias;
 	private List<String> enlaces;
 	private List<String> imagenes;
-	private String url;
-	
-	public SitioTuristico() {
-	}
+	private String urlArticulo;
 
 	public String getId() {
 		return id;
@@ -66,18 +63,18 @@ public class SitioTuristico implements Identificable {
 		this.imagenes = imagenes;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUrlArticulo() {
+		return urlArticulo;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrlArticulo(String url) {
+		this.urlArticulo = urlArticulo;
 	}
 
 	@Override
 	public String toString() {
 		return "SitioTuristico [nombre=" + nombre + ", resumen=" + resumen + ", categorias=" + categorias + ", enlaces="
-				+ enlaces + ", imagenes=" + imagenes + ", url=" + url + "]";
+				+ enlaces + ", imagenes=" + imagenes + ", urlArticulo=" + urlArticulo + "]";
 	}
 
 }

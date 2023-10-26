@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import estaciones.modelo.SitioTuristico;
+import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.Repositorio;
 import repositorio.RepositorioException;
@@ -38,7 +39,8 @@ public class ServicioSitios implements IServicioSitios {
 		String latitud = coordinates.split(",")[0];
 		String longitud = coordinates.split(",")[1];
 		String url = "http://api.geonames.org/findNearbyWikipedia?lat=" + latitud
-				+ "lng" + longitud + "&country=ES&radius=10&username=arso&lang=es";
+				+ "&lng=" + longitud + "&country=ES&radius=10&username=aadd&lang=es";
+	
 		return url;
 	}
 
@@ -62,7 +64,7 @@ public class ServicioSitios implements IServicioSitios {
 	}
 	
 	@Override
-	public List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException {
+	public List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException, EntidadNoEncontrada {
 		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 
 		// 1. Obtener una factoría
@@ -76,6 +78,7 @@ public class ServicioSitios implements IServicioSitios {
 		}
 
 		String url = getUrlByCoordinates(coordenadas);
+		System.out.println(url);
 
 		try {
 			documento = analizador.parse(url);
@@ -169,8 +172,13 @@ public class ServicioSitios implements IServicioSitios {
 				// DISTANCIA COORDENADAS DE BÚSQUEDAS - RESUMEN
 				
 				// URL WIKIPEDIA - RESUMEN Y SITIO EN CONCRETO
+				String urlWikipedia = "http://es.wikipedia.org/wiki/" + sitio.getNombre().replace(" ", "_");
+				resumenSitio.setUrlArticulo(urlWikipedia);
+				sitio.setUrlArticulo(urlWikipedia);
 				
-				repositorio.add(sitio);
+				String id_actual = repositorio.add(sitio);
+				System.out.println(repositorio.getById(id_actual));
+				System.out.println("Creado sitio nuevo con id: "+id_actual);
 				resumenes.add(resumenSitio);
 			}
 		}
@@ -178,9 +186,12 @@ public class ServicioSitios implements IServicioSitios {
 	}
 
 	@Override
-	public SitioTuristico getInfoSitio(String id) {
-		// TODO Auto-generated method stub
-		return null;
+	public SitioTuristico getInfoSitio(String id) throws RepositorioException, EntidadNoEncontrada {
+		
+		if (id == null || id.isEmpty())
+			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
+
+		return repositorio.getById(id);
 	}
 	
 	

@@ -3,12 +3,13 @@ package estaciones.servicio;
 import java.util.List;
 
 import estaciones.modelo.SitioTuristico;
+import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
 
 public interface IServicioSitios {
 
-	List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException;
+	List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException, EntidadNoEncontrada;
 
-	SitioTuristico getInfoSitio(String id);
+	SitioTuristico getInfoSitio(String id) throws RepositorioException, EntidadNoEncontrada;
 
 }
