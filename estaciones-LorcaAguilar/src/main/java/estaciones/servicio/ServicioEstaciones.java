@@ -1,6 +1,7 @@
 package estaciones.servicio;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import estaciones.modelo.Estacion;
 import estaciones.modelo.SitioTuristico;
@@ -10,7 +11,9 @@ import repositorio.Repositorio;
 import repositorio.RepositorioException;
 
 public class ServicioEstaciones implements IServicioEstaciones {
-
+	
+	ServicioSitios servicioSitios = new ServicioSitios();
+	
 	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
 
 	@Override
@@ -36,13 +39,20 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		return id;
 	}
 
+
 	@Override
-	public LinkedList<SitioTuristico> getSitiosProximos(String id) {
+	public List<ResumenSitio> getSitiosProximos(String id) throws RepositorioException, EntidadNoEncontrada {
 		
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
-		//TODO
-		return null;
+		
+		Estacion estacion = repositorio.getById(id);
+		
+		List<ResumenSitio> sitios = new LinkedList<ResumenSitio>();
+		
+		sitios = servicioSitios.getSitios(estacion.getCoordenadas());
+				 
+		return sitios;
 	}
 
 	@Override

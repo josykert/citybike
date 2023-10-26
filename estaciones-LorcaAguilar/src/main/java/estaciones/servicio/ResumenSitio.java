@@ -3,17 +3,14 @@ package estaciones.servicio;
 public class ResumenSitio {
 
 	private String nombre;
-	private String descripcion;
+	private String resumen;
 	private String distancia;
 	private String urlArticulo;
 
-	public ResumenSitio(String nombre, String descripcion, String distancia, String urlArticulo) {
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.distancia = distancia;
-		this.urlArticulo = urlArticulo;
-	}
-
+	public ResumenSitio() {
+		// TODO Auto-generated constructor stub
+	}	
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -22,12 +19,12 @@ public class ResumenSitio {
 		this.nombre = nombre;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getResumen() {
+		return resumen;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setResumen(String resumen) {
+		this.resumen = resumen;
 	}
 
 	public String getDistancia() {
@@ -48,7 +45,7 @@ public class ResumenSitio {
 
 	@Override
 	public String toString() {
-		return "ResumenSitio [nombre=" + nombre + ", descripcion=" + descripcion + ", distancia=" + distancia
+		return "ResumenSitio [nombre=" + nombre + ", resumen=" + resumen + ", distancia=" + distancia
 				+ ", urlArticulo=" + urlArticulo + "]";
 	}
 

@@ -1,6 +1,7 @@
 package estaciones.servicio;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import estaciones.modelo.Estacion;
 import estaciones.modelo.SitioTuristico;
@@ -11,7 +12,7 @@ public interface IServicioEstaciones {
 
 	String crear (String nombre, int puestos, String codigoPostal, String coordenadas) throws RepositorioException;
 
-	LinkedList<SitioTuristico> getSitiosProximos(String id);
+	List<ResumenSitio> getSitiosProximos(String id) throws RepositorioException, EntidadNoEncontrada;
 
 	void setSitiosProximos(String id, LinkedList<SitioTuristico> sitios) throws RepositorioException, EntidadNoEncontrada;
 

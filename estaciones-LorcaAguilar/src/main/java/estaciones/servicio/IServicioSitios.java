@@ -1,12 +1,13 @@
 package estaciones.servicio;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import estaciones.modelo.SitioTuristico;
+import repositorio.RepositorioException;
 
 public interface IServicioSitios {
 
-	LinkedList<ResumenSitio> getSitios(String coordenadas);
+	List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException;
 
 	SitioTuristico getInfoSitio(String id);
 
