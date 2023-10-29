@@ -18,9 +18,11 @@ class ServicioEstacionesTest {
         assertDoesNotThrow(() -> {
             String id = servicioEstaciones.crear("Estacion1", 20, "28005", "40.712776,-74.005974");
             assertNotNull(id);
+            System.out.println(servicioEstaciones.getEstacion(id));
             
             List<ResumenSitio> sitios = servicioEstaciones.getSitiosProximos(id);
             assertNotNull(sitios);
+            System.out.println(sitios);
         });
     }
 

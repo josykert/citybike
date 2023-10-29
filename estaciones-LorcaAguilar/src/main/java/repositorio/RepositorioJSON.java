@@ -81,23 +81,19 @@ public abstract class RepositorioJSON<T extends Identificable> implements Reposi
 	@Override
     public String add(T entidad) throws RepositorioException {
 
-        String id = UUID.randomUUID().toString();
-
+		String id;
+		if(entidad.getId() == null) {
+			id = UUID.randomUUID().toString();
+		}
+		else{
+			id = entidad.getId();
+			}
         entidad.setId(id);
         save(entidad);
 
         return id;
     }
 	
-	@Override
-    public String add(T entidad, String id) throws RepositorioException {
-
-
-        entidad.setId(id);
-        save(entidad);
-
-        return id;
-    }
 
 	@Override
 	public void update(T entidad) throws RepositorioException, EntidadNoEncontrada {

@@ -193,7 +193,7 @@ public class ServicioSitios implements IServicioSitios {
 				sitio.setImagenes(imagenes);
 			}
 			
-			repositorio.add(sitio, id);
+			repositorio.add(sitio/*, id*/);
 			
 			System.out.println("entra al if");
 

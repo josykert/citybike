@@ -14,8 +14,6 @@ import especificacion.Especificacion;
 public interface Repositorio<T, K> {
 
 	K add(T entity) throws RepositorioException;
-	
-	K add(T entity, String id) throws RepositorioException;
 
 	void update(T entity) throws RepositorioException, EntidadNoEncontrada;
 

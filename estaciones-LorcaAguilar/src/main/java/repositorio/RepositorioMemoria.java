@@ -29,18 +29,6 @@ public class RepositorioMemoria<T extends Identificable> implements RepositorioS
 		
 		return id;
 	}
-	
-	@Override
-	public String add(T entity, String id) throws RepositorioException {
-		
-		entity.setId(id);
-		this.entidades.put(id, entity);		
-		
-		return id;
-	}
-
-	
-	
 
 	@Override
 	public void update(T entity) throws EntidadNoEncontrada {
