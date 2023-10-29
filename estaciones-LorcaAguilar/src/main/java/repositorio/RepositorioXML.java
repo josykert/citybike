@@ -85,9 +85,9 @@ public abstract class RepositorioXML<T extends Identificable> implements Reposit
 	/*** Fin métodos de apoyo ***/
 
 	@Override
-	public String add(T entidad) throws RepositorioException {
+	public String add(T entidad, String id) throws RepositorioException {
 
-		String id = UUID.randomUUID().toString();
+		String id = id;
 
 		entidad.setId(id);
 		save(entidad);

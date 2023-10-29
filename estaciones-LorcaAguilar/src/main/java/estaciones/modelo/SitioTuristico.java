@@ -1,13 +1,11 @@
 package estaciones.modelo;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import repositorio.Identificable;
 
 public class SitioTuristico implements Identificable {
 
-	private String id;
 	private String nombre;
 	private String resumen;
 	private List<String> categorias;
@@ -16,18 +14,10 @@ public class SitioTuristico implements Identificable {
 	private String urlArticulo;
 
 	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getNombre() {
 		return nombre;
 	}
 
-	public void setNombre(String nombre) {
+	public void setId(String nombre) {
 		this.nombre = nombre;
 	}
 
@@ -68,7 +58,7 @@ public class SitioTuristico implements Identificable {
 	}
 
 	public void setUrlArticulo(String url) {
-		this.urlArticulo = urlArticulo;
+		this.urlArticulo = url;
 	}
 
 	@Override

@@ -87,98 +87,26 @@ public class ServicioSitios implements IServicioSitios {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 
 		NodeList elementos = documento.getElementsByTagName("entry");
 
 		for (int i = 0; i < elementos.getLength(); i++) {
 
 			Node elemento = elementos.item(i);
-
+			
 			if (elemento.getNodeType() == Node.ELEMENT_NODE) {
 				Element sitioElement = (Element) elemento;
-				ResumenSitio resumenSitio = new ResumenSitio();
-				SitioTuristico sitio = new SitioTuristico();
-				sitio.setNombre(sitioElement.getElementsByTagName("title").item(0).getTextContent());
+				ResumenSitio resumenSitio = new ResumenSitio();								
+				
+				resumenSitio.setUrlArticulo(sitioElement.getElementsByTagName("wikipediaUrl").item(0).getTextContent());
+				
+				resumenSitio.setDistancia(sitioElement.getElementsByTagName("distance").item(0).getTextContent());
+
 				resumenSitio.setNombre(sitioElement.getElementsByTagName("title").item(0).getTextContent());
-
-				String wikipediaUrl = sitioElement.getElementsByTagName("wikipediaUrl").item(0).getTextContent();
-				String dbpediaUrl = "https://es.dbpedia.org/data/"
-						+ wikipediaUrl.substring(wikipediaUrl.lastIndexOf("/") + 1) + ".json";
-
-				// Leer JSON desde DBpedia
-				try {
-					fuente = new InputStreamReader(new java.net.URL(dbpediaUrl).openStream());
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				JsonReader jsonReader = Json.createReader(fuente);
-				JsonObject obj = jsonReader.readObject();
-
-				String wikiResource = "http://es.dbpedia.org/resource/" + sitio.getNombre().replace(" ", "_");
-				JsonObject objJSON = obj.getJsonObject(wikiResource);
-
-				// Obtener descripcion
-				String resumenProperty = "http://dbpedia.org/ontology/abstract";
-				JsonArray resumenArray = getJsonArray(objJSON, resumenProperty);
-				if (resumenArray != null) {
-					for (JsonObject info : resumenArray.getValuesAs(JsonObject.class)) {
-						String resumen = getValue(info);
-						resumenSitio.setResumen(resumen);
-						sitio.setResumen(resumen);
-					}
-				}
 				
-
-				// Obtener categorias
-				String categoriaProperty = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-				JsonArray categoriaArray = getJsonArray(objJSON, categoriaProperty);
-				if (categoriaArray != null) {
-					List<String> categorias = new LinkedList<String>();
-					for (JsonObject info : categoriaArray.getValuesAs(JsonObject.class)) {
-						String categoria = getValue(info);
-						categorias.add(categoria);
-					}
-					sitio.setCategorias(categorias);
-				}
-
-				// Obtener enlaces externos
-				String externalLinkProperty = "http://dbpedia.org/ontology/wikiPageExternalLink";
-				JsonArray externalLinkArray = getJsonArray(objJSON, externalLinkProperty);
-				if (externalLinkArray != null) {
-					List<String> enlacesExternos = new LinkedList<String>();
-					for (JsonObject info : externalLinkArray.getValuesAs(JsonObject.class)) {
-						String enlaceExterno = getValue(info);
-						enlacesExternos.add(enlaceExterno);
-					}
-					sitio.setEnlaces(enlacesExternos);
-				}
-
-				// Obtener imagen
-				String imagenProperty = "http://es.dbpedia.org/property/imagen";
-				JsonArray imagenArray = getJsonArray(objJSON, imagenProperty);
-				if (imagenArray != null) {
-					List<String> imagenes = new LinkedList<String>();
-					for (JsonObject info : imagenArray.getValuesAs(JsonObject.class)) {
-						String imagen = getValue(info).replace(" ", "_");
-						imagenes.add(imagen);
-					}
-					sitio.setImagenes(imagenes);
-				}
-
-				// DISTANCIA COORDENADAS DE BÚSQUEDAS - RESUMEN
+				resumenSitio.setResumen(sitioElement.getElementsByTagName("summary").item(0).getTextContent());
 				
-				// URL WIKIPEDIA - RESUMEN Y SITIO EN CONCRETO
-				String urlWikipedia = "http://es.wikipedia.org/wiki/" + sitio.getNombre().replace(" ", "_");
-				resumenSitio.setUrlArticulo(urlWikipedia);
-				sitio.setUrlArticulo(urlWikipedia);
-				
-				String id_actual = repositorio.add(sitio);
-				System.out.println(repositorio.getById(id_actual));
-				System.out.println("Creado sitio nuevo con id: "+id_actual);
 				resumenes.add(resumenSitio);
 			}
 		}
@@ -190,10 +118,89 @@ public class ServicioSitios implements IServicioSitios {
 		
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
+		
+		try {
+			repositorio.getById(id);
+		} catch (Exception e) {
+			SitioTuristico sitio = new SitioTuristico();
+			
+			String dbpediaUrl = "https://es.dbpedia.org/data/"
+					+ id + ".json";
+			// Leer JSON desde DBpedia
+			try {
+				fuente = new InputStreamReader(new java.net.URL(dbpediaUrl).openStream());
+			} catch (MalformedURLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			JsonReader jsonReader = Json.createReader(fuente);
+			JsonObject obj = jsonReader.readObject();
+			
+			String wikiResource = "http://es.dbpedia.org/resource/" + id;
+			JsonObject objJSON = obj.getJsonObject(wikiResource);
+			
+			sitio.setId(id);
 
+			sitio.setUrlArticulo(wikiResource);
+			
+			// Obtener descripcion
+			String resumenProperty = "http://dbpedia.org/ontology/abstract";
+			JsonArray resumenArray = getJsonArray(objJSON, resumenProperty);
+			if (resumenArray != null) {
+				for (JsonObject info : resumenArray.getValuesAs(JsonObject.class)) {
+					String resumen = getValue(info);
+					sitio.setResumen(resumen);
+				}
+			}
+			
+			// Obtener categorias
+			String categoriaProperty = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+			JsonArray categoriaArray = getJsonArray(objJSON, categoriaProperty);
+			if (categoriaArray != null) {
+				List<String> categorias = new LinkedList<String>();
+				for (JsonObject info : categoriaArray.getValuesAs(JsonObject.class)) {
+					String categoria = getValue(info);
+					categorias.add(categoria);
+				}
+				sitio.setCategorias(categorias);
+			}
+
+			// Obtener enlaces externos
+			String externalLinkProperty = "http://dbpedia.org/ontology/wikiPageExternalLink";
+			JsonArray externalLinkArray = getJsonArray(objJSON, externalLinkProperty);
+			if (externalLinkArray != null) {
+				List<String> enlacesExternos = new LinkedList<String>();
+				for (JsonObject info : externalLinkArray.getValuesAs(JsonObject.class)) {
+					String enlaceExterno = getValue(info);
+					enlacesExternos.add(enlaceExterno);
+				}
+				sitio.setEnlaces(enlacesExternos);
+			}
+
+			// Obtener imagen
+			String imagenProperty = "http://es.dbpedia.org/property/imagen";
+			JsonArray imagenArray = getJsonArray(objJSON, imagenProperty);
+			if (imagenArray != null) {
+				List<String> imagenes = new LinkedList<String>();
+				for (JsonObject info : imagenArray.getValuesAs(JsonObject.class)) {
+					String imagen = getValue(info).replace(" ", "_");
+					imagenes.add(imagen);
+				}
+				sitio.setImagenes(imagenes);
+			}
+			
+			repositorio.add(sitio, id);
+			
+			System.out.println("entra al if");
+
+			return sitio;
+		}
+		
+		System.out.println("no entra al if");
 		return repositorio.getById(id);
 	}
-	
-	
-
 }
