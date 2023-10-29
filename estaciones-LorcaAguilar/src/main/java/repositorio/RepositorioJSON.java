@@ -1,17 +1,18 @@
 package repositorio;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.json.bind.Jsonb;
+import javax.json.bind.spi.JsonbProvider;
 
-public abstract class RepositorioXML<T extends Identificable> implements RepositorioString<T> {
+public abstract class RepositorioJSON<T extends Identificable> implements RepositorioString<T> {
 
-	public final static String DIRECTORIO = "repositorio-xml/";
+	public final static String DIRECTORIO = "repositorio-json/";
 
 	static {
 
@@ -24,12 +25,11 @@ public abstract class RepositorioXML<T extends Identificable> implements Reposit
 	// Método abstracto que se delega a los repositorio específicos
 	public abstract Class<T> getClase();
 	
-	
 	/*** Métodos de apoyo ***/
 
 	protected String getDocumento(String id) {
 
-		return DIRECTORIO + getClase().getSimpleName() + "-" + id + ".xml";
+		return DIRECTORIO + getClase().getSimpleName() + "-" + id + ".json";
 	}
 
 	protected boolean checkDocumento(String id) {
@@ -42,52 +42,56 @@ public abstract class RepositorioXML<T extends Identificable> implements Reposit
 	}
 
 	protected void save(T entity) throws RepositorioException {
+	    final String documento = getDocumento(entity.getId());
+	    final File fichero = new File(documento);
 
-		final String documento = getDocumento(entity.getId());
+	    try {
+	        Jsonb jsonb = JsonbProvider.provider().create().build();
+	        String jsonString = jsonb.toJson(entity);
 
-		final File fichero = new File(documento);
-
-		try {
-
-			JAXBContext contexto = JAXBContext.newInstance(getClase());
-			Marshaller marshaller = contexto.createMarshaller();
-
-			marshaller.setProperty("jaxb.formatted.output", true);
-
-			marshaller.marshal(entity, fichero);
-
-		} catch (Exception e) {
-
-			throw new RepositorioException("Error al guardar la entidad con id: " + entity.getId(), e);
-		}
+	        try (FileWriter writer = new FileWriter(fichero)) {
+	            writer.write(jsonString);
+	        }
+	    } catch (Exception e) {
+	        throw new RepositorioException("Error al guardar la entidad con id: " + entity.getId(), e);
+	    }
 	}
 
-	@SuppressWarnings("unchecked")
 	protected T load(String id) throws RepositorioException, EntidadNoEncontrada {
+	    if (!checkDocumento(id)) {
+	        throw new EntidadNoEncontrada("La entidad no existe, id: " + id);
+	    }
 
-		if (!checkDocumento(id))
-			throw new EntidadNoEncontrada("La entidad no existe, id: " + id);
+	    final String documento = getDocumento(id);
 
-		final String documento = getDocumento(id);
+	    try {
+	        Jsonb jsonb = JsonbProvider.provider().create().build();
 
-		try {
-
-			JAXBContext contexto = JAXBContext.newInstance(getClase());
-			Unmarshaller unmarshaller = contexto.createUnmarshaller();
-
-			return (T) unmarshaller.unmarshal(new File(documento));
-
-		} catch (Exception e) {
-			throw new RepositorioException("Error al cargar la entidad con id: " + id, e);
-		}
+	        try (FileReader reader = new FileReader(documento)) {
+	            return jsonb.fromJson(reader, getClase());
+	        }
+	    } catch (Exception e) {
+	        throw new RepositorioException("Error al cargar la entidad con id: " + id, e);
+	    }
 	}
+
 
 	/*** Fin métodos de apoyo ***/
-
+	
 	@Override
     public String add(T entidad) throws RepositorioException {
 
         String id = UUID.randomUUID().toString();
+
+        entidad.setId(id);
+        save(entidad);
+
+        return id;
+    }
+	
+	@Override
+    public String add(T entidad, String id) throws RepositorioException {
+
 
         entidad.setId(id);
         save(entidad);
@@ -131,12 +135,12 @@ public abstract class RepositorioXML<T extends Identificable> implements Reposit
 
 		File directorio = new File(DIRECTORIO);
 
-		File[] entidades = directorio.listFiles(f -> f.isFile() && f.getName().endsWith(".xml"));
+		File[] entidades = directorio.listFiles(f -> f.isFile() && f.getName().endsWith(".json"));
 
 		final String prefijo = getClase().getSimpleName() + "-";
 		for (File file : entidades) {
 
-			String id = file.getName().substring(prefijo.length(), file.getName().length() - 4);
+			String id = file.getName().substring(prefijo.length(), file.getName().length() - 5);
 
 			resultado.add(id);
 		}
@@ -161,5 +165,4 @@ public abstract class RepositorioXML<T extends Identificable> implements Reposit
 		
 		return resultado;
 	}
-
 }

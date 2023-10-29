@@ -21,7 +21,7 @@ class ServicioSitiosTest {
             List<ResumenSitio> sitios = servicioSitios.getSitios("40.712776,-3.005974");
             System.out.println(sitios);
             assertNotNull(sitios);
-            SitioTuristico sitio = servicioSitios.getInfoSitio("Valdegrudas");
+            SitioTuristico sitio = servicioSitios.getInfoSitio("Catedral_de_Murcia");
             System.out.println(sitio);
             assertNotNull(sitio);
             sitio = servicioSitios.getInfoSitio("Valdegrudas");
