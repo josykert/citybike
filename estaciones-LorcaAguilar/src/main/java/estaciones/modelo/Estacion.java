@@ -12,15 +12,17 @@ public class Estacion implements Identificable{
 	private String nombre;
 	private int puestos;
 	private String codigoPostal;
-	private String coordenadas;
+	private double latitud;
+	private double longitud;
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
 
-	public Estacion(String nombre, int puestos, String codigoPostal, String coordenadas) {
+	public Estacion(String nombre, int puestos, String codigoPostal, double latitud, double longitud) {
 		this.nombre = nombre;
 		this.puestos = puestos;
 		this.codigoPostal = codigoPostal;
-		this.coordenadas = coordenadas;
+		this.latitud = latitud;
+		this.longitud = longitud;
 		this.fechaAlta = LocalDate.now();
 		this.sitios = new LinkedList<SitioTuristico>();
 	}
@@ -57,14 +59,6 @@ public class Estacion implements Identificable{
 		this.codigoPostal = codigoPostal;
 	}
 
-	public String getCoordenadas() {
-		return coordenadas;
-	}
-
-	public void setCoordenadas(String coordenadas) {
-		this.coordenadas = coordenadas;
-	}
-
 	public LocalDate getFechaAlta() {
 		return fechaAlta;
 	}
@@ -81,11 +75,30 @@ public class Estacion implements Identificable{
 		this.sitios = sitios;
 	}
 
+	public double getLatitud() {
+		return latitud;
+	}
+
+	public void setLatitud(double latitud) {
+		this.latitud = latitud;
+	}
+
+	public double getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(double longitud) {
+		this.longitud = longitud;
+	}
+
 	@Override
 	public String toString() {
 		return "Estacion [id=" + id + ", nombre=" + nombre + ", puestos=" + puestos + ", codigoPostal=" + codigoPostal
-				+ ", coordenadas=" + coordenadas + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios + "]";
+				+ ", latitud=" + latitud + ", longitud=" + longitud + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios
+				+ "]";
 	}
+
+	
 
 	
 }

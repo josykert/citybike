@@ -18,7 +18,7 @@ class ServicioSitiosTest {
     @Test
     void testGetSitiosAndGetInfoSitio() {
         assertDoesNotThrow(() -> {
-            List<ResumenSitio> sitios = servicioSitios.getSitios("40.712776,-3.005974");
+            List<ResumenSitio> sitios = servicioSitios.getSitios(40.712776, -3.005974);
             System.out.println(sitios);
             assertNotNull(sitios);
             SitioTuristico sitio = servicioSitios.getInfoSitio("Catedral_de_Murcia");

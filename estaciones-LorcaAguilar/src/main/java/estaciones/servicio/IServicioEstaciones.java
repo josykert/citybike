@@ -7,12 +7,13 @@ import estaciones.modelo.Estacion;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
 import repositorio.RepositorioException;
+import repositorio.SitiosTuristicosException;
 
 public interface IServicioEstaciones {
 
-	String crear (String nombre, int puestos, String codigoPostal, String coordenadas) throws RepositorioException;
+	String crear(String nombre, int puestos, String codigoPostal, double latitud, double longitud) throws RepositorioException;
 
-	List<ResumenSitio> getSitiosProximos(String id) throws RepositorioException, EntidadNoEncontrada;
+	List<SitioTuristico> getSitiosProximos(String id) throws SitiosTuristicosException, RepositorioException, EntidadNoEncontrada;
 
 	void setSitiosProximos(String id, LinkedList<SitioTuristico> sitios) throws RepositorioException, EntidadNoEncontrada;
 

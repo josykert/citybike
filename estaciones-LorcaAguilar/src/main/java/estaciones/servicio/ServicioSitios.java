@@ -26,6 +26,7 @@ import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.Repositorio;
 import repositorio.RepositorioException;
+import repositorio.SitiosTuristicosException;
 
 public class ServicioSitios implements IServicioSitios {
 	
@@ -34,15 +35,6 @@ public class ServicioSitios implements IServicioSitios {
 	InputStreamReader fuente;
 	
 	private Repositorio<SitioTuristico, String> repositorio = FactoriaRepositorios.getRepositorio(SitioTuristico.class);
-	
-	private String getUrlByCoordinates(String coordinates) {
-		String latitud = coordinates.split(",")[0];
-		String longitud = coordinates.split(",")[1];
-		String url = "http://api.geonames.org/findNearbyWikipedia?lat=" + latitud
-				+ "&lng=" + longitud + "&country=ES&radius=10&username=aadd&lang=es";
-	
-		return url;
-	}
 
 	private JsonArray getJsonArray(JsonObject obj, String property) {
 		if (obj.containsKey(property) && !obj.isNull(property)) {
@@ -63,8 +55,12 @@ public class ServicioSitios implements IServicioSitios {
 		}
 	}
 	
+	public static String formatearUrl(String nombre) {
+        return nombre.replace(" ", "_");
+    }
+	
 	@Override
-	public List<ResumenSitio> getSitios(String coordenadas) throws RepositorioException, EntidadNoEncontrada {
+	public List<ResumenSitio> getSitios(double latitud, double longitud) throws RepositorioException, EntidadNoEncontrada, SitiosTuristicosException {
 		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 
 		// 1. Obtener una factoría
@@ -77,15 +73,16 @@ public class ServicioSitios implements IServicioSitios {
 			e.printStackTrace();
 		}
 
-		String url = getUrlByCoordinates(coordenadas);
+		String url = "http://api.geonames.org/findNearbyWikipedia?lat=" + latitud
+				+ "&lng=" + longitud + "&country=ES&radius=10&username=arso&lang=es";;
 		System.out.println(url);
 
 		try {
 			documento = analizador.parse(url);
 		} catch (SAXException e) {
-			e.printStackTrace();
+			throw new SitiosTuristicosException("Excepcion SAX", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new SitiosTuristicosException("Excepcion entrada y salida", e);
 		}
 		
 
@@ -103,7 +100,7 @@ public class ServicioSitios implements IServicioSitios {
 				
 				resumenSitio.setDistancia(sitioElement.getElementsByTagName("distance").item(0).getTextContent());
 
-				resumenSitio.setNombre(sitioElement.getElementsByTagName("title").item(0).getTextContent());
+				resumenSitio.setNombre(formatearUrl(sitioElement.getElementsByTagName("title").item(0).getTextContent()));
 				
 				resumenSitio.setResumen(sitioElement.getElementsByTagName("summary").item(0).getTextContent());
 				
@@ -114,7 +111,7 @@ public class ServicioSitios implements IServicioSitios {
 	}
 
 	@Override
-	public SitioTuristico getInfoSitio(String id) throws RepositorioException, EntidadNoEncontrada {
+	public SitioTuristico getInfoSitio(String id) throws  RepositorioException, EntidadNoEncontrada, SitiosTuristicosException {
 		
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
@@ -130,11 +127,9 @@ public class ServicioSitios implements IServicioSitios {
 			try {
 				fuente = new InputStreamReader(new java.net.URL(dbpediaUrl).openStream());
 			} catch (MalformedURLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				throw new SitiosTuristicosException("Url mal formada " + id, e);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				throw new SitiosTuristicosException("Excepcion entrada y salida " + id, e);
 			}
 			
 			JsonReader jsonReader = Json.createReader(fuente);
@@ -194,13 +189,10 @@ public class ServicioSitios implements IServicioSitios {
 			}
 			
 			repositorio.add(sitio/*, id*/);
-			
-			System.out.println("entra al if");
 
 			return sitio;
 		}
 		
-		System.out.println("no entra al if");
 		return repositorio.getById(id);
 	}
 }

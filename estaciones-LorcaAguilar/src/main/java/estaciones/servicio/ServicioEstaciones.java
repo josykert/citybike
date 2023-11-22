@@ -9,6 +9,7 @@ import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
 import repositorio.Repositorio;
 import repositorio.RepositorioException;
+import repositorio.SitiosTuristicosException;
 
 public class ServicioEstaciones implements IServicioEstaciones {
 	
@@ -17,7 +18,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
 
 	@Override
-	public String crear(String nombre, int puestos, String codigoPostal, String coordenadas)
+	public String crear(String nombre, int puestos, String codigoPostal, double latitud, double longitud)
 			throws RepositorioException {
 
 		if (nombre == null || nombre.isEmpty())
@@ -29,10 +30,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		if (codigoPostal == null || codigoPostal.isEmpty())
 			throw new IllegalArgumentException("codigoPostal: no debe ser nulo ni vacio");
 
-		if (coordenadas == null || coordenadas.isEmpty())
-			throw new IllegalArgumentException("coordenadas: no debe ser nulo ni vacio");
-
-		Estacion estacion = new Estacion(nombre, puestos, codigoPostal, coordenadas);
+		Estacion estacion = new Estacion(nombre, puestos, codigoPostal, latitud, longitud);
 
 		String id = repositorio.add(estacion);
 
@@ -41,16 +39,26 @@ public class ServicioEstaciones implements IServicioEstaciones {
 
 
 	@Override
-	public List<ResumenSitio> getSitiosProximos(String id) throws RepositorioException, EntidadNoEncontrada {
+	public List<SitioTuristico> getSitiosProximos(String id) throws RepositorioException, EntidadNoEncontrada, SitiosTuristicosException {
 		
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 		
 		Estacion estacion = repositorio.getById(id);
 		
-		List<ResumenSitio> sitios = new LinkedList<ResumenSitio>();
+		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 		
-		sitios = servicioSitios.getSitios(estacion.getCoordenadas());
+		resumenes = servicioSitios.getSitios(estacion.getLatitud(), estacion.getLongitud());
+		
+		List<SitioTuristico> sitios= new LinkedList<SitioTuristico>();
+		
+		SitioTuristico sitio;
+		
+		for(ResumenSitio r: resumenes) {
+			sitio = servicioSitios.getInfoSitio(r.getNombre());
+			sitios.add(sitio);
+			System.out.println(sitio);
+		}
 				 
 		return sitios;
 	}

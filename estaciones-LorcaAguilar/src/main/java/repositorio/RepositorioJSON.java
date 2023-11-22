@@ -74,7 +74,7 @@ public abstract class RepositorioJSON<T extends Identificable> implements Reposi
 	        throw new RepositorioException("Error al cargar la entidad con id: " + id, e);
 	    }
 	}
-
+	
 
 	/*** Fin métodos de apoyo ***/
 	
@@ -84,11 +84,11 @@ public abstract class RepositorioJSON<T extends Identificable> implements Reposi
 		String id;
 		if(entidad.getId() == null) {
 			id = UUID.randomUUID().toString();
+	        entidad.setId(id);
 		}
 		else{
 			id = entidad.getId();
-			}
-        entidad.setId(id);
+		}
         save(entidad);
 
         return id;
