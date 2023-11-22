@@ -16,6 +16,7 @@ public class Estacion implements Identificable{
 	private double longitud;
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
+	private LinkedList<Bicicleta> bicis;
 
 	public Estacion(String nombre, int puestos, String codigoPostal, double latitud, double longitud) {
 		this.nombre = nombre;
@@ -25,6 +26,7 @@ public class Estacion implements Identificable{
 		this.longitud = longitud;
 		this.fechaAlta = LocalDate.now();
 		this.sitios = new LinkedList<SitioTuristico>();
+		this.bicis = new LinkedList<Bicicleta>();
 	}
 
 	public String getId() {
@@ -91,14 +93,19 @@ public class Estacion implements Identificable{
 		this.longitud = longitud;
 	}
 
+	public LinkedList<Bicicleta> getBicis() {
+		return bicis;
+	}
+
+	public void setBicis(LinkedList<Bicicleta> bicis) {
+		this.bicis = bicis;
+	}
+
 	@Override
 	public String toString() {
 		return "Estacion [id=" + id + ", nombre=" + nombre + ", puestos=" + puestos + ", codigoPostal=" + codigoPostal
 				+ ", latitud=" + latitud + ", longitud=" + longitud + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios
-				+ "]";
+				+ ", bicis=" + bicis + "]";
 	}
 
-	
-
-	
 }

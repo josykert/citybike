@@ -18,5 +18,13 @@ public interface IServicioEstaciones {
 	void setSitiosProximos(String id, LinkedList<SitioTuristico> sitios) throws RepositorioException, EntidadNoEncontrada;
 
 	Estacion getEstacion(String id) throws RepositorioException, EntidadNoEncontrada;
+	
+	String registrarBicicleta(String modelo, String idEstacion);
+	
+	void estacionarBicicleta(String idBicicleta, String idEstacion);
+	
+	void estacionarBicicleta(String idBicicleta);
+	
+	
 
 }
