@@ -3,6 +3,7 @@ package estaciones.servicio;
 import java.util.LinkedList;
 import java.util.List;
 
+import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
@@ -25,6 +26,12 @@ public interface IServicioEstaciones {
 	
 	void estacionarBicicleta(String idBicicleta);
 	
+	void retirarBicicleta(String idBicicleta);
 	
+	void eliminarBicicleta(String idBicicleta, String motivo);
+	
+	List<Bicicleta> getBicicletasCerca(double latitud, double longitud);
+	
+	List<Estacion> getEstacionesTuristicas();
 
 }

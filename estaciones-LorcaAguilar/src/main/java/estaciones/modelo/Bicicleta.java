@@ -2,6 +2,7 @@ package estaciones.modelo;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.Map;
 
 import repositorio.Identificable;
 
@@ -12,8 +13,8 @@ public class Bicicleta implements Identificable{
 	private LocalDate fechaAlta;
 	private LocalDate fechaBaja;
 	private LocalDate motivoBaja;
-	private LinkedList<Estacion> estaciones;
-	
+    private Map<Estacion, LocalDate> historico;
+    
 	public String getId() {
 		return id;
 	}
@@ -28,6 +29,9 @@ public class Bicicleta implements Identificable{
 	}
 	public LocalDate getFechaAlta() {
 		return fechaAlta;
+	}
+	public Map<Estacion, LocalDate> getHistorico() {
+		return historico;
 	}
 	public void setFechaAlta(LocalDate fechaAlta) {
 		this.fechaAlta = fechaAlta;
@@ -44,17 +48,17 @@ public class Bicicleta implements Identificable{
 	public void setMotivoBaja(LocalDate motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public LinkedList<Estacion> getEstaciones() {
-		return estaciones;
+	public void setHistorico(Map<Estacion, LocalDate> historico) {
+		this.historico = historico;
 	}
-	public void setEstaciones(LinkedList<Estacion> estaciones) {
-		this.estaciones = estaciones;
-	}
+	
 	@Override
 	public String toString() {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
-				+ ", motivoBaja=" + motivoBaja + ", estaciones=" + estaciones + "]";
+				+ ", motivoBaja=" + motivoBaja + "]";
 	}
+
+	
 
 	
 }
