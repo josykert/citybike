@@ -20,18 +20,18 @@ public interface IServicioEstaciones {
 
 	Estacion getEstacion(String id) throws RepositorioException, EntidadNoEncontrada;
 	
-	String registrarBicicleta(String modelo, String idEstacion);
+	String registrarBicicleta(String modelo, String idEstacion) throws RepositorioException, EntidadNoEncontrada;
 	
-	void estacionarBicicleta(String idBicicleta, String idEstacion);
+	void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada;
 	
-	void estacionarBicicleta(String idBicicleta);
+	void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada;
 	
-	void retirarBicicleta(String idBicicleta);
+	void retirarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada;
 	
-	void eliminarBicicleta(String idBicicleta, String motivo);
+	void eliminarBicicleta(String idBicicleta, String motivo) throws RepositorioException, EntidadNoEncontrada;
 	
 	List<Bicicleta> getBicicletasCerca(double latitud, double longitud);
 	
-	List<Estacion> getEstacionesTuristicas();
+	List<Estacion> getEstacionesTuristicas() throws RepositorioException;
 
 }

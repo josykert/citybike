@@ -2,6 +2,7 @@ package estaciones.modelo;
 
 import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import repositorio.Identificable;
@@ -12,9 +13,13 @@ public class Bicicleta implements Identificable{
 	private String modelo;
 	private LocalDate fechaAlta;
 	private LocalDate fechaBaja;
-	private LocalDate motivoBaja;
-    private Map<Estacion, LocalDate> historico;
+	private String motivoBaja;
+    private List<Historico> historico;
     
+    public Bicicleta() {
+    	this.fechaAlta= LocalDate.now();
+    	this.historico= new LinkedList<Historico>();
+    }
 	public String getId() {
 		return id;
 	}
@@ -30,9 +35,6 @@ public class Bicicleta implements Identificable{
 	public LocalDate getFechaAlta() {
 		return fechaAlta;
 	}
-	public Map<Estacion, LocalDate> getHistorico() {
-		return historico;
-	}
 	public void setFechaAlta(LocalDate fechaAlta) {
 		this.fechaAlta = fechaAlta;
 	}
@@ -42,21 +44,24 @@ public class Bicicleta implements Identificable{
 	public void setFechaBaja(LocalDate fechaBaja) {
 		this.fechaBaja = fechaBaja;
 	}
-	public LocalDate getMotivoBaja() {
+	public String getMotivoBaja() {
 		return motivoBaja;
 	}
-	public void setMotivoBaja(LocalDate motivoBaja) {
+	public void setMotivoBaja(String motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public void setHistorico(Map<Estacion, LocalDate> historico) {
+	public List<Historico> getHistorico() {
+		return historico;
+	}
+	public void setHistorico(List<Historico> historico) {
 		this.historico = historico;
 	}
-	
 	@Override
 	public String toString() {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
-				+ ", motivoBaja=" + motivoBaja + "]";
+				+ ", motivoBaja=" + motivoBaja + ", historico=" + historico + "]";
 	}
+	
 
 	
 

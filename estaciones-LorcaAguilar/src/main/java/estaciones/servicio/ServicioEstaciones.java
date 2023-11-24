@@ -1,9 +1,12 @@
 package estaciones.servicio;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
+import estaciones.modelo.Historico;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
@@ -16,6 +19,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	ServicioSitios servicioSitios = new ServicioSitios();
 	
 	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
+	private Repositorio<Bicicleta, String> repositorioBicicletas = FactoriaRepositorios.getRepositorio(Bicicleta.class);
 
 	@Override
 	public String crear(String nombre, int puestos, String codigoPostal, double latitud, double longitud)
@@ -85,6 +89,93 @@ public class ServicioEstaciones implements IServicioEstaciones {
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 
 		return repositorio.getById(id);
+	}
+
+
+	@Override
+	public String registrarBicicleta(String modelo, String idEstacion) throws RepositorioException, EntidadNoEncontrada {
+		Bicicleta bici = new Bicicleta();
+		bici.setModelo(modelo);
+		
+		String id = repositorioBicicletas.add(bici); //Hacemos esto para poder tener el id de la bicicleta y asignarselo al historico
+		
+		estacionarBicicleta(id, idEstacion);
+		
+		return id;
+	}
+
+
+	@Override
+	public void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada {
+		
+		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+		Estacion estacion = repositorio.getById(idEstacion);
+		
+		//TODO estacionar bici
+		Historico hist = new Historico();
+		hist.setFechaEstacionamiento(LocalDate.now());
+		hist.setIdEstacion(idEstacion);
+		hist.setIdBicicleta(idBicicleta);
+		
+		//repositorioHistoricos.add(hist);
+		
+		bici.getHistorico().add(hist);
+		
+		estacion.setPuestos(estacion.getPuestos()-1);
+		
+		repositorioBicicletas.update(bici);
+		repositorio.update(estacion);
+		
+	}
+
+
+	@Override
+	public void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada {
+		
+		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+		//Estacion estacion = repositorio.getById(idEstacion);
+		
+		//TODO estacionar bici
+		
+		repositorioBicicletas.update(bici);
+		//repositorio.update(estacion);
+		
+	}
+
+
+	@Override
+	public void retirarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada {
+		
+		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+		
+		//TODO quitar estacionamiento de la bici
+		
+	}
+
+
+	@Override
+	public void eliminarBicicleta(String idBicicleta, String motivo) throws RepositorioException, EntidadNoEncontrada {
+		
+		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+		
+		bici.setFechaBaja(LocalDate.now());
+		
+		bici.setMotivoBaja(motivo);
+		
+	}
+
+
+	@Override
+	public List<Bicicleta> getBicicletasCerca(double latitud, double longitud) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Estacion> getEstacionesTuristicas() throws RepositorioException {
+		List<Estacion> estaciones = repositorio.getAll();
+		return null;
 	}
 
 }

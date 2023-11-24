@@ -2,7 +2,6 @@ package estaciones.repositorio;
 
 import estaciones.modelo.SitioTuristico;
 import repositorio.RepositorioJSON;
-import repositorio.RepositorioXML;
 
 public class RepositorioSitiosTuristicosJSON extends RepositorioJSON<SitioTuristico>{
 
