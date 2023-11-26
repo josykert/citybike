@@ -14,7 +14,7 @@ public class Bicicleta implements Identificable{
 	private LocalDate fechaAlta;
 	private LocalDate fechaBaja;
 	private String motivoBaja;
-    private List<Historico> historico;
+    private LinkedList<Historico> historico;
     
     public Bicicleta() {
     	this.fechaAlta= LocalDate.now();
@@ -50,10 +50,10 @@ public class Bicicleta implements Identificable{
 	public void setMotivoBaja(String motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public List<Historico> getHistorico() {
+	public LinkedList<Historico> getHistorico() {
 		return historico;
 	}
-	public void setHistorico(List<Historico> historico) {
+	public void setHistorico(LinkedList<Historico> historico) {
 		this.historico = historico;
 	}
 	@Override

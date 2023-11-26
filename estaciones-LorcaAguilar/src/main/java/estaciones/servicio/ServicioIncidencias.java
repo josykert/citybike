@@ -7,7 +7,9 @@ import java.util.List;
 import estaciones.modelo.Estado;
 import estaciones.modelo.Incidencia;
 import repositorio.EntidadNoEncontrada;
+import repositorio.EstacionesException;
 import repositorio.FactoriaRepositorios;
+import repositorio.IncidenciasException;
 import repositorio.Repositorio;
 import repositorio.RepositorioException;
 
@@ -25,11 +27,8 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		incidencia.setFechaCreacion(LocalDate.now());
 		incidencia.setIdBicicleta(idBicicleta);
 		
-		
 		return repositorioIncidencias.add(incidencia);
 	}
-
-
 
 	@Override
 	public List<Incidencia> getIncidenciasAbiertas() throws RepositorioException {
@@ -44,49 +43,48 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		return incidenciasAbiertas;
 	}
 
-
-
 	@Override
-	public void cancelarIncidencia(String idIncidencia) throws EntidadNoEncontrada, RepositorioException {
-		//TODO comprobar que el estado es pendiente
+	public void cancelarIncidencia(String idIncidencia) throws EntidadNoEncontrada, RepositorioException, IncidenciasException {
 		Incidencia i = repositorioIncidencias.getById(idIncidencia);
-		i.setEstado(Estado.CANCELADO);
-		repositorioIncidencias.update(i);
-		
+		if (i.getEstado() == Estado.PENDIENTE) {
+			i.setEstado(Estado.CANCELADO);
+			repositorioIncidencias.update(i);
+		} else {
+			throw new IncidenciasException("no hay ninguna estacion que contenga esta bici");
+		}
 	}
 
-
-
 	@Override
-	public void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException {
-		//TODO comprobar que el estado es pendiente
+	public void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException, IncidenciasException {
 		Incidencia i = repositorioIncidencias.getById(idIncidencia);
-		i.setEstado(Estado.ASIGNADA);
-		i.setNombreOperario(nombre);
-		repositorioIncidencias.update(i);
+		if (i.getEstado() == Estado.PENDIENTE) {
+			i.setEstado(Estado.ASIGNADA);
+			i.setNombreOperario(nombre);
+			repositorioIncidencias.update(i);
+		} else {
+			throw new IncidenciasException("no hay ninguna estacion que contenga esta bici");
+		}
 		
 	}
-
-
 
 	@Override
 	public void resolverIncidencia(String idIncidencia, boolean reparada)
-			throws EntidadNoEncontrada, RepositorioException {
+			throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException {
 		
-		//TODO comprobar que el estado es pendiente
 		Incidencia i = repositorioIncidencias.getById(idIncidencia);
-		i.setEstado(Estado.RESUELTA);
-		if(reparada) {
-			//Se estaciona
-			servicioEstaciones.estacionarBicicleta(idIncidencia);
+		if (i.getEstado() == Estado.PENDIENTE) {
+			i.setEstado(Estado.RESUELTA);
+			if(reparada) {
+				//Se estaciona
+				servicioEstaciones.estacionarBicicleta(idIncidencia);
+			}
+			else {
+				servicioEstaciones.eliminarBicicleta(i.getIdBicicleta(), "No ha podido ser reparada");
+			}
+			repositorioIncidencias.update(i);
+		} else {
+			throw new IncidenciasException("no hay ninguna estacion que contenga esta bici");
 		}
-		else {
-			servicioEstaciones.eliminarBicicleta(i.getIdBicicleta(), "No ha podido ser reparada");
-			
-		}
-		repositorioIncidencias.update(i);
-
-		
 	}
 
 }

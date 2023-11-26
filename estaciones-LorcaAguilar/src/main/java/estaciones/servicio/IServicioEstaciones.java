@@ -7,6 +7,7 @@ import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
+import repositorio.EstacionesException;
 import repositorio.RepositorioException;
 import repositorio.SitiosTuristicosException;
 
@@ -24,13 +25,13 @@ public interface IServicioEstaciones {
 	
 	void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada;
 	
-	void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada;
+	void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException;
 	
-	void retirarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada;
+	void retirarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException;
 	
-	void eliminarBicicleta(String idBicicleta, String motivo) throws RepositorioException, EntidadNoEncontrada;
+	void eliminarBicicleta(String idBicicleta, String motivo) throws RepositorioException, EntidadNoEncontrada, EstacionesException;
 	
-	List<Bicicleta> getBicicletasCerca(double latitud, double longitud);
+	List<Bicicleta> getBicicletasCerca(double latitud, double longitud) throws RepositorioException;
 	
 	List<Estacion> getEstacionesTuristicas() throws RepositorioException;
 
