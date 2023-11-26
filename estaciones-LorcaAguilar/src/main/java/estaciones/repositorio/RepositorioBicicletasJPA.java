@@ -3,7 +3,7 @@ package estaciones.repositorio;
 import estaciones.modelo.Bicicleta;
 import repositorio.RepositorioJPA;
 
-public class RepositorioBicicletasJPA extends RepositorioJPA<Bicicleta>{
+public class RepositorioBicicletasJPA extends RepositorioJPA<Bicicleta> {
 
 	@Override
 	public Class<Bicicleta> getClase() {
@@ -12,7 +12,7 @@ public class RepositorioBicicletasJPA extends RepositorioJPA<Bicicleta>{
 
 	@Override
 	public String getNombre() {
-		return "Bicicleta";
+		return Bicicleta.class.getName().substring(Bicicleta.class.getName().lastIndexOf(".") + 1);
 	}
 
 }

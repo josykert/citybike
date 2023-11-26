@@ -1,37 +1,31 @@
-package estaciones.modelo;
+package estaciones.modelo.copy;
 
-import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.*;
+
 import repositorio.Identificable;
 
 @Entity
-@Table(name = "bicicleta")
-public class Bicicleta implements Serializable, Identificable {
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Table(name="bicicleta")
+public class Bicicleta implements Identificable{
 
 	@Id
-    private String id = UUID.randomUUID().toString();
-    
-    private String modelo;
-
-    private LocalDate fechaAlta;
-    private LocalDate fechaBaja;
-    private String motivoBaja;
-
+	private String id;
+	private String modelo;
+    @Convert(converter = LocalDateConverter.class)
+	private LocalDate fechaAlta;
+    @Convert(converter = LocalDateConverter.class)
+	private LocalDate fechaBaja;
+	private String motivoBaja;
+	
     @OneToMany(mappedBy = "bicicleta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Historico> historico;
+    private LinkedList<Historico> historico = new LinkedList<>();
 
     public Bicicleta() {
         this.fechaAlta = LocalDate.now();
-        this.historico = new java.util.ArrayList<>();
     }
     
 	public String getId() {
@@ -64,10 +58,10 @@ public class Bicicleta implements Serializable, Identificable {
 	public void setMotivoBaja(String motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public List<Historico> getHistorico() {
+	public LinkedList<Historico> getHistorico() {
 		return historico;
 	}
-	public void setHistorico(List<Historico> historico) {
+	public void setHistorico(LinkedList<Historico> historico) {
 		this.historico = historico;
 	}
 	@Override
@@ -75,6 +69,20 @@ public class Bicicleta implements Serializable, Identificable {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
 				+ ", motivoBaja=" + motivoBaja + ", historico=" + historico + "]";
 	}
+	
+	@Converter(autoApply = true)
+	class LocalDateConverter implements AttributeConverter<LocalDate, java.sql.Date> {
+	    @Override
+	    public java.sql.Date convertToDatabaseColumn(LocalDate localDate) {
+	        return (localDate == null ? null : java.sql.Date.valueOf(localDate));
+	    }
+
+	    @Override
+	    public LocalDate convertToEntityAttribute(java.sql.Date sqlDate) {
+	        return (sqlDate == null ? null : sqlDate.toLocalDate());
+	    }
+	}
+
 	
 
 	

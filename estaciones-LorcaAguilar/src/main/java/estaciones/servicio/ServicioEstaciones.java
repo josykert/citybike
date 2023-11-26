@@ -117,9 +117,9 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
 		hist.setIdEstacion(idEstacion);
-		hist.setIdBicicleta(idBicicleta);
+		hist.setBicicleta(bici);
 		
-		LinkedList<Historico> newHistorico = bici.getHistorico();
+		List<Historico> newHistorico = bici.getHistorico();
 		newHistorico.add(hist);
 		bici.setHistorico(newHistorico);
 		
@@ -151,9 +151,9 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
 		hist.setIdEstacion(estacionLibre.getId());
-		hist.setIdBicicleta(idBicicleta);
+		hist.setBicicleta(bici);
 		
-		LinkedList<Historico> newHistorico = bici.getHistorico();
+		List<Historico> newHistorico = bici.getHistorico();
 		newHistorico.add(hist);
 		bici.setHistorico(newHistorico);
 				
@@ -197,9 +197,9 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		hist.setFechaSalida(LocalDate.now());
 		hist.setFechaEstacionamiento(histEliminar.getFechaEstacionamiento());
 		hist.setIdEstacion(histEliminar.getIdEstacion());
-		hist.setIdBicicleta(histEliminar.getIdBicicleta());
+		hist.setBicicleta(histEliminar.getBicicleta());
 		
-		LinkedList<Historico> newHistorico = bici.getHistorico();
+		List<Historico> newHistorico = bici.getHistorico();
 		newHistorico.remove(histEliminar);
 		newHistorico.add(hist);
 		bici.setHistorico(newHistorico);

@@ -1,4 +1,4 @@
-package estaciones.modelo;
+package estaciones.modelo.copy;
 
 import java.time.LocalDate;
 import java.util.LinkedList;

@@ -12,8 +12,7 @@ public class RepositorioIncidenciasJPA extends RepositorioJPA<Incidencia>{
 
 	@Override
 	public String getNombre() {
-		
-		return "Incidencia";
+		return Incidencia.class.getName().substring(Incidencia.class.getName().lastIndexOf(".") + 1);
 	}
 
 }
