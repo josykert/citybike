@@ -24,14 +24,17 @@ public class Bicicleta implements Serializable, Identificable {
 
     private LocalDate fechaAlta;
     private LocalDate fechaBaja;
+    @Lob
     private String motivoBaja;
+    private EstadoBicicleta estado;
 
     @OneToMany(mappedBy = "bicicleta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Historico> historico;
+    private List<String> historicos;
 
     public Bicicleta() {
+    	this.estado = EstadoBicicleta.DISPONIBLE;
         this.fechaAlta = LocalDate.now();
-        this.historico = new java.util.ArrayList<>();
+        this.historicos = new java.util.ArrayList<>();
     }
     
 	public String getId() {
@@ -45,6 +48,13 @@ public class Bicicleta implements Serializable, Identificable {
 	}
 	public void setModelo(String modelo) {
 		this.modelo = modelo;
+	}
+	public EstadoBicicleta getEstado() {
+		return estado;
+	}
+	
+	public void setEstado(EstadoBicicleta estado) {
+		this.estado = estado;
 	}
 	public LocalDate getFechaAlta() {
 		return fechaAlta;
@@ -64,16 +74,16 @@ public class Bicicleta implements Serializable, Identificable {
 	public void setMotivoBaja(String motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public List<Historico> getHistorico() {
-		return historico;
+	public List<String> getHistorico() {
+		return historicos;
 	}
-	public void setHistorico(List<Historico> historico) {
-		this.historico = historico;
+	public void setHistorico(List<String> historicos) {
+		this.historicos = historicos;
 	}
 	@Override
 	public String toString() {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
-				+ ", motivoBaja=" + motivoBaja + ", historico=" + historico + "]";
+				+ ", motivoBaja=" + motivoBaja + ", historicos=" + historicos + "]";
 	}
 	
 

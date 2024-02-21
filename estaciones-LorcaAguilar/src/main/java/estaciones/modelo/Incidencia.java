@@ -16,7 +16,7 @@ public class Incidencia implements Identificable{
 	private LocalDate fechaCierre;
 	private String idBicicleta;
 	private String nombreOperario;
-	private Estado estado;
+	private EstadoIncidencia estado;
 	
 	public String getId() {
 		return id;
@@ -36,10 +36,10 @@ public class Incidencia implements Identificable{
 	public void setIdBicicleta(String idBicicleta) {
 		this.idBicicleta = idBicicleta;
 	}
-	public Estado getEstado() {
+	public EstadoIncidencia getEstado() {
 		return estado;
 	}
-	public void setEstado(Estado estado) {
+	public void setEstado(EstadoIncidencia estado) {
 		this.estado = estado;
 	}
 	public LocalDate getFechaCierre() {

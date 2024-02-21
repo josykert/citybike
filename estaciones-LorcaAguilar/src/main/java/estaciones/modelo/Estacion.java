@@ -22,7 +22,7 @@ public class Estacion implements Identificable{
 	private double longitud;
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
-	private LinkedList<Bicicleta> bicis;
+	private LinkedList<String> bicis;
 
 	public Estacion() {
 		// TODO Auto-generated constructor stub
@@ -36,7 +36,7 @@ public class Estacion implements Identificable{
 		this.longitud = longitud;
 		this.fechaAlta = LocalDate.now();
 		this.sitios = new LinkedList<SitioTuristico>();
-		this.bicis = new LinkedList<Bicicleta>();
+		this.bicis = new LinkedList<String>();
 	}
 
 	public String getId() {
@@ -103,11 +103,11 @@ public class Estacion implements Identificable{
 		this.longitud = longitud;
 	}
 
-	public LinkedList<Bicicleta> getBicis() {
+	public LinkedList<String> getBicis() {
 		return bicis;
 	}
 
-	public void setBicis(LinkedList<Bicicleta> bicis) {
+	public void setBicis(LinkedList<String> bicis) {
 		this.bicis = bicis;
 	}
 

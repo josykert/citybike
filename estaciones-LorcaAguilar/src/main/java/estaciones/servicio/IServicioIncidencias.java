@@ -10,7 +10,7 @@ import repositorio.RepositorioException;
 
 public interface IServicioIncidencias {
 
-	String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException, IncidenciasException;
+	String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException, IncidenciasException, EntidadNoEncontrada;
 	
 	void cancelarIncidencia(String idIncidencia) throws EntidadNoEncontrada, RepositorioException, IncidenciasException;
 	

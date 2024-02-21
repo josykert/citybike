@@ -19,9 +19,7 @@ public class Historico implements Serializable, Identificable{
 	@Id
 	private String id = UUID.randomUUID().toString();
 
-	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bicicleta_id")
-	private Bicicleta bicicleta;
+	private String idBicicleta;
 	
 	private String idEstacion;
 	private LocalDate fechaEstacionamiento;
@@ -33,12 +31,12 @@ public class Historico implements Serializable, Identificable{
 	public void setId(String id) {
 		this.id = id;
 	}
-    public Bicicleta getBicicleta() {
-        return bicicleta;
+    public String getBicicleta() {
+        return idBicicleta;
     }
 
-    public void setBicicleta(Bicicleta bicicleta) {
-        this.bicicleta = bicicleta;
+    public void setBicicleta(String idBicicleta) {
+        this.idBicicleta = idBicicleta;
     }
 	public String getIdEstacion() {
 		return idEstacion;

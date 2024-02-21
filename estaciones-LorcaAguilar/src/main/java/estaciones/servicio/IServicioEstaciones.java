@@ -31,7 +31,7 @@ public interface IServicioEstaciones {
 	
 	void eliminarBicicleta(String idBicicleta, String motivo) throws RepositorioException, EntidadNoEncontrada, EstacionesException;
 	
-	List<Bicicleta> getBicicletasCerca(double latitud, double longitud) throws RepositorioException;
+	List<String> getBicicletasCerca(double latitud, double longitud) throws RepositorioException, EntidadNoEncontrada;
 	
 	List<Estacion> getEstacionesTuristicas() throws RepositorioException;
 

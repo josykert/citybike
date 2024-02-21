@@ -1,5 +1,5 @@
 package estaciones.modelo;
 
-public enum Estado {
+public enum EstadoIncidencia {
 	PENDIENTE, CANCELADO, ASIGNADA, RESUELTA;
 }

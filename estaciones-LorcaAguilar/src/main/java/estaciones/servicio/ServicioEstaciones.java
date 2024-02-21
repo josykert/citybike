@@ -8,6 +8,7 @@ import java.util.List;
 
 import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
+import estaciones.modelo.EstadoBicicleta;
 import estaciones.modelo.Historico;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
@@ -23,6 +24,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	
 	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
 	private Repositorio<Bicicleta, String> repositorioBicicletas = FactoriaRepositorios.getRepositorio(Bicicleta.class);
+	private Repositorio<Historico, String> repositorioHistorico = FactoriaRepositorios.getRepositorio(Historico.class);
 
 	@Override
 	public String crear(String nombre, int puestos, String codigoPostal, double latitud, double longitud)
@@ -121,17 +123,18 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
 		hist.setIdEstacion(idEstacion);
-		hist.setBicicleta(bici);
+		hist.setBicicleta(bici.getId());
 		
-		List<Historico> newHistorico = bici.getHistorico();
-		newHistorico.add(hist);
+		List<String> newHistorico = bici.getHistorico();
+		newHistorico.add(hist.getId());
 		bici.setHistorico(newHistorico);
 		
 		estacion.setPuestos(estacion.getPuestos() - 1);
-		LinkedList<Bicicleta> newBicis = estacion.getBicis();
-		newBicis.add(bici);
+		LinkedList<String> newBicis = estacion.getBicis();
+		newBicis.add(bici.getId());
 		estacion.setBicis(newBicis);
 		
+		repositorioHistorico.update(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacion);
 	}
@@ -141,7 +144,8 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	public void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
-		for (Historico historico : bici.getHistorico()) {
+		for (String idHistorico : bici.getHistorico()) {
+			Historico historico = repositorioHistorico.getById(idHistorico);
 			if (historico.getFechaSalida() == null) {
 				throw new EstacionesException("La bicicleta ya está aparcada en una estación.");
 			}
@@ -162,17 +166,18 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
 		hist.setIdEstacion(estacionLibre.getId());
-		hist.setBicicleta(bici);
+		hist.setBicicleta(bici.getId());
 		
-		List<Historico> newHistorico = bici.getHistorico();
-		newHistorico.add(hist);
+		List<String> newHistorico = bici.getHistorico();
+		newHistorico.add(hist.getId());
 		bici.setHistorico(newHistorico);
 				
 		estacionLibre.setPuestos(estacionLibre.getPuestos() - 1);
-		LinkedList<Bicicleta> newBicis = estacionLibre.getBicis();
-		newBicis.add(bici);
+		LinkedList<String> newBicis = estacionLibre.getBicis();
+		newBicis.add(bici.getId());
 		estacionLibre.setBicis(newBicis);
 		
+		repositorioHistorico.update(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacionLibre);
 	}
@@ -183,15 +188,16 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
 		
-		List<Historico> historico = bici.getHistorico();
+		List<String> historicos = bici.getHistorico();
 		
 		String idEstacionUsada = null;
 		Historico histEliminar = null;
 		
-		for (Historico x : historico) {
-			if (x.getFechaSalida() == null) {
-				idEstacionUsada = x.getIdEstacion();
-				histEliminar = x;
+		for (String x : historicos) {
+			Historico historico = repositorioHistorico.getById(x);
+			if (historico.getFechaSalida() == null) {
+				idEstacionUsada = historico.getIdEstacion();
+				histEliminar = historico;
 			}
 		}
 		
@@ -200,8 +206,8 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		Estacion estacionUsada = repositorio.getById(idEstacionUsada);
 		
-		LinkedList<Bicicleta> newBicis = estacionUsada.getBicis();
-		newBicis.remove(bici);
+		LinkedList<String> newBicis = estacionUsada.getBicis();
+		newBicis.remove(bici.getId());
 		estacionUsada.setBicis(newBicis);
 		
 		Historico hist = new Historico();
@@ -210,11 +216,12 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		hist.setIdEstacion(histEliminar.getIdEstacion());
 		hist.setBicicleta(histEliminar.getBicicleta());
 		
-		List<Historico> newHistorico = bici.getHistorico();
-		newHistorico.remove(histEliminar);
-		newHistorico.add(hist);
+		List<String> newHistorico = bici.getHistorico();
+		newHistorico.remove(histEliminar.getId());
+		newHistorico.add(hist.getId());
 		bici.setHistorico(newHistorico);
 
+		repositorioHistorico.update(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacionUsada);		
 	}
@@ -230,7 +237,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Estacion estacionBuscada = null;
 		
 		for (Estacion estacion : estaciones) {
-			if (estacion.getBicis().contains(bici)) {
+			if (estacion.getBicis().contains(bici.getId())) {
 				estacionBuscada = estacion;
 			}
 		}
@@ -238,19 +245,31 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		if (estacionBuscada == null)
 			throw new EstacionesException("no hay ninguna estacion que contenga esta bici");
 		
-		LinkedList<Bicicleta> newBicis = estacionBuscada.getBicis();
-		newBicis.remove(bici);
+		LinkedList<String> newBicis = estacionBuscada.getBicis();
+		newBicis.remove(bici.getId());
 		estacionBuscada.setBicis(newBicis);		
 		
 		bici.setFechaBaja(LocalDate.now());
 		bici.setMotivoBaja(motivo);
 		
+		bici.setEstado(EstadoBicicleta.INDISPONIBLE);
+		
+		Historico hist = new Historico();
+		hist.setFechaSalida(LocalDate.now());
+		hist.setIdEstacion(estacionBuscada.getId());
+		hist.setBicicleta(bici.getId());
+		
+		List<String> newHistorico = bici.getHistorico();
+		newHistorico.add(hist.getId());
+		bici.setHistorico(newHistorico);
+		
+		repositorioHistorico.update(hist);
 		repositorio.update(estacionBuscada);
-		repositorioBicicletas.delete(bici);
+		repositorioBicicletas.update(bici);
 	}
 
 	@Override
-	public List<Bicicleta> getBicicletasCerca(double latitud, double longitud) throws RepositorioException {
+	public List<String> getBicicletasCerca(double latitud, double longitud) throws RepositorioException, EntidadNoEncontrada {
 	    List<Estacion> estaciones = repositorio.getAll();
 
 	    // Ordenar las estaciones por proximidad a las coordenadas dadas
@@ -267,9 +286,13 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	    List<Estacion> estacionesCercanas = estaciones.subList(0, Math.min(3, estaciones.size()));
 
 	    // Combinar las listas de bicicletas de estas estaciones
-	    List<Bicicleta> bicicletasCercanas = new LinkedList<>();
+	    List<String> bicicletasCercanas = new LinkedList<>();
 	    for (Estacion estacion : estacionesCercanas) {
-	        bicicletasCercanas.addAll(estacion.getBicis());
+	    	for (String idBici : estacion.getBicis()) {
+	    		Bicicleta bici = repositorioBicicletas.getById(idBici);
+	    		if (bici.getEstado() == EstadoBicicleta.DISPONIBLE) {
+	    			bicicletasCercanas.add(idBici);	    		}
+	    	}
 	    }
 
 	    return bicicletasCercanas;
