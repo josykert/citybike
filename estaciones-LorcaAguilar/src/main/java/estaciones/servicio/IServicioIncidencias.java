@@ -10,11 +10,11 @@ import repositorio.RepositorioException;
 
 public interface IServicioIncidencias {
 
-	String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException;
+	String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException, IncidenciasException;
 	
 	void cancelarIncidencia(String idIncidencia) throws EntidadNoEncontrada, RepositorioException, IncidenciasException;
 	
-	void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException, IncidenciasException;
+	void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException;
 	
 	void resolverIncidencia(String idIncidencia, boolean reparada) throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException;
 	

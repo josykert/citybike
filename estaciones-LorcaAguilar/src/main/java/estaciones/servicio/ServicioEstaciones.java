@@ -96,7 +96,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 
 
 	@Override
-	public String registrarBicicleta(String modelo, String idEstacion) throws RepositorioException, EntidadNoEncontrada {
+	public String registrarBicicleta(String modelo, String idEstacion) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		Bicicleta bici = new Bicicleta();
 		bici.setModelo(modelo);
 		
@@ -109,10 +109,14 @@ public class ServicioEstaciones implements IServicioEstaciones {
 
 
 	@Override
-	public void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada {
+	public void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
 		Estacion estacion = repositorio.getById(idEstacion);
+		
+		if (estacion.getPuestos() <= 0) {
+			throw new EstacionesException("La estación no tiene puestos disponibles para aparcar la bicicleta.");
+		}
 		
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
@@ -123,7 +127,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		newHistorico.add(hist);
 		bici.setHistorico(newHistorico);
 		
-		estacion.setPuestos(estacion.getPuestos()-1);
+		estacion.setPuestos(estacion.getPuestos() - 1);
 		LinkedList<Bicicleta> newBicis = estacion.getBicis();
 		newBicis.add(bici);
 		estacion.setBicis(newBicis);
@@ -131,22 +135,29 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacion);
 	}
-
+	
 
 	@Override
 	public void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+		for (Historico historico : bici.getHistorico()) {
+			if (historico.getFechaSalida() == null) {
+				throw new EstacionesException("La bicicleta ya está aparcada en una estación.");
+			}
+		}
+	
 		List<Estacion> estaciones = repositorio.getAll();
 		Estacion estacionLibre = null;
 		for (Estacion estacion : estaciones) {
 			if (estacion.getPuestos() > 0) {
 				estacionLibre = estacion;
+				break;
 			}
 		}
 		
 		if (estacionLibre == null)
-			throw new EstacionesException("estacion: no hay ninguna estación con puestos libres");
+			throw new EstacionesException("No hay ninguna estación con puestos libres.");
 		
 		Historico hist = new Historico();
 		hist.setFechaEstacionamiento(LocalDate.now());
@@ -157,7 +168,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		newHistorico.add(hist);
 		bici.setHistorico(newHistorico);
 				
-		estacionLibre.setPuestos(estacionLibre.getPuestos()-1);
+		estacionLibre.setPuestos(estacionLibre.getPuestos() - 1);
 		LinkedList<Bicicleta> newBicis = estacionLibre.getBicis();
 		newBicis.add(bici);
 		estacionLibre.setBicis(newBicis);
@@ -165,7 +176,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacionLibre);
 	}
-
+	
 
 	@Override
 	public void retirarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException {

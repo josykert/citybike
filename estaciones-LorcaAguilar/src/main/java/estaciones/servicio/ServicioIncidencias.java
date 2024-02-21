@@ -20,8 +20,15 @@ public class ServicioIncidencias implements IServicioIncidencias{
 	ServicioEstaciones servicioEstaciones = new ServicioEstaciones();
 
 	@Override
-	public String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException {
+	public String crearIncidencia(String idBicicleta, String descripcion) throws RepositorioException, IncidenciasException {
 		
+        List<Incidencia> incidenciasAbiertas = getIncidenciasAbiertas();
+        for (Incidencia incidencia : incidenciasAbiertas) {
+            if (incidencia.getIdBicicleta().equals(idBicicleta)) {
+                throw new IncidenciasException("Ya existe una incidencia abierta para esta bicicleta.");
+            }
+        }
+
 		Incidencia incidencia = new Incidencia();
 		incidencia.setEstado(Estado.PENDIENTE);
 		incidencia.setFechaCreacion(LocalDate.now());
@@ -55,17 +62,20 @@ public class ServicioIncidencias implements IServicioIncidencias{
 	}
 
 	@Override
-	public void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException, IncidenciasException {
+	public void asignarIncidencia(String idIncidencia, String nombre) throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException {
 		Incidencia i = repositorioIncidencias.getById(idIncidencia);
 		if (i.getEstado() == Estado.PENDIENTE) {
 			i.setEstado(Estado.ASIGNADA);
 			i.setNombreOperario(nombre);
 			repositorioIncidencias.update(i);
+			
+			// Aquí asumimos que la bicicleta deja de ocupar un sitio en la estación
+			// Se llama al método para manejar la lógica de retirar la bicicleta de la estación
+			servicioEstaciones.retirarBicicleta(i.getIdBicicleta());
 		} else {
-			throw new IncidenciasException("no hay ninguna estacion que contenga esta bici");
+			throw new IncidenciasException("La incidencia no se encuentra en estado pendiente o ya no hay una estación que contenga esta bicicleta.");
 		}
-		
-	}
+	}	
 
 	@Override
 	public void resolverIncidencia(String idIncidencia, boolean reparada)

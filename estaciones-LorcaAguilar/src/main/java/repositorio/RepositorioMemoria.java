@@ -21,7 +21,7 @@ public class RepositorioMemoria<T extends Identificable> implements RepositorioS
 	private int id = 0; // asigna secuencialmente los identificadores
 	
 	@Override
-	public String add(T entity) {
+	public String add(T entity) throws RepositorioException {
 		
 		String id = String.valueOf(this.id++);
 		entity.setId(id);
@@ -31,7 +31,7 @@ public class RepositorioMemoria<T extends Identificable> implements RepositorioS
 	}
 
 	@Override
-	public void update(T entity) throws EntidadNoEncontrada {
+	public void update(T entity) throws RepositorioException, EntidadNoEncontrada {
 		
 		if (! this.entidades.containsKey(entity.getId()))
 			throw new EntidadNoEncontrada(entity.getId() + " no existe en el repositorio");
@@ -40,7 +40,7 @@ public class RepositorioMemoria<T extends Identificable> implements RepositorioS
 	}
 
 	@Override
-	public void delete(T entity) throws EntidadNoEncontrada {
+	public void delete(T entity) throws RepositorioException, EntidadNoEncontrada {
 		
 		if (! this.entidades.containsKey(entity.getId()))
 			throw new EntidadNoEncontrada(entity.getId() + " no existe en el repositorio");

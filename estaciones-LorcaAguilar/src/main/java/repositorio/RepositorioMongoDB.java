@@ -1,5 +1,9 @@
 package repositorio;
 
+
+import java.util.Properties;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,9 +40,20 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		/**************************************
 		 * MONGODB
 		 ****************************************/
+		Properties properties = new Properties();
+        try (InputStream input = RepositorioMongoDB.class.getClassLoader().getResourceAsStream("mongo.properties")) {
+            properties.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null; // Or handle the error appropriately
+        }
+        
+        String mongoUri = properties.getProperty("mongo.uri");
+        String databaseName = properties.getProperty("mongo.database");
+
 		
 		ConnectionString connectionString = new ConnectionString(
-				"mongodb+srv://pablocarrascoegea:CArgR82N4MfovXqG@aadd.75sircw.mongodb.net/?retryWrites=true&w=majority");		// I need to configure the CodecRegistry to include a codec to handle the
+				mongoUri);		// I need to configure the CodecRegistry to include a codec to handle the
 		// translation to and from BSON for our POJOs.
 		CodecRegistry pojoCodecRegistry = CodecRegistries
 				.fromProviders(PojoCodecProvider.builder().automatic(true).build());
@@ -54,7 +69,7 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 
 		MongoClient mongoClient = MongoClients.create(settings);
 
-		MongoDatabase database = mongoClient.getDatabase("test");
+		MongoDatabase database = mongoClient.getDatabase(databaseName);
 
 		MongoCollection<T> mongoCollection = obtenerColeccion(database);
 		return mongoCollection;
