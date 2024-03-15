@@ -1,6 +1,7 @@
 package estaciones.servicio;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -84,7 +85,6 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		estacion.setSitios(sitios);
 
 		repositorio.update(estacion);
-
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		}
 		
 		Historico hist = new Historico();
-		hist.setFechaEstacionamiento(LocalDate.now());
+		hist.setFechaEstacionamiento(LocalDateTime.now());
 		hist.setIdEstacion(idEstacion);
 		hist.setBicicleta(bici.getId());
 		
@@ -134,7 +134,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		newBicis.add(bici.getId());
 		estacion.setBicis(newBicis);
 		
-		repositorioHistorico.update(hist);
+		repositorioHistorico.add(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacion);
 	}
@@ -164,7 +164,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 			throw new EstacionesException("No hay ninguna estación con puestos libres.");
 		
 		Historico hist = new Historico();
-		hist.setFechaEstacionamiento(LocalDate.now());
+		hist.setFechaEstacionamiento(LocalDateTime.now());
 		hist.setIdEstacion(estacionLibre.getId());
 		hist.setBicicleta(bici.getId());
 		
@@ -177,7 +177,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		newBicis.add(bici.getId());
 		estacionLibre.setBicis(newBicis);
 		
-		repositorioHistorico.update(hist);
+		repositorioHistorico.add(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacionLibre);
 	}
@@ -211,7 +211,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		estacionUsada.setBicis(newBicis);
 		
 		Historico hist = new Historico();
-		hist.setFechaSalida(LocalDate.now());
+		hist.setFechaSalida(LocalDateTime.now());
 		hist.setFechaEstacionamiento(histEliminar.getFechaEstacionamiento());
 		hist.setIdEstacion(histEliminar.getIdEstacion());
 		hist.setBicicleta(histEliminar.getBicicleta());
@@ -255,7 +255,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		bici.setEstado(EstadoBicicleta.INDISPONIBLE);
 		
 		Historico hist = new Historico();
-		hist.setFechaSalida(LocalDate.now());
+		hist.setFechaSalida(LocalDateTime.now());
 		hist.setIdEstacion(estacionBuscada.getId());
 		hist.setBicicleta(bici.getId());
 		

@@ -3,7 +3,6 @@ package estaciones.LorcaAguilar;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
 import estaciones.servicio.ServicioEstaciones;
 import repositorio.EntidadNoEncontrada;
@@ -52,12 +51,13 @@ public class SistemaBicicletasTest {
     void testEstacionarBicicletaConIdEstacion() {
         Assertions.assertDoesNotThrow(() -> {
             String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
-            servicioEstaciones.registrarBicicleta("Decathlon", id);
             
-            servicioEstaciones.estacionarBicicleta("Decathlon", id);
+            String idBici = servicioEstaciones.registrarBicicleta("Decathlon", id);
+            
+            servicioEstaciones.estacionarBicicleta(idBici, id);
         });
 
-        Assertions.assertThrows(RepositorioException.class, () -> {
+        Assertions.assertThrows(EstacionesException.class, () -> {
             servicioEstaciones.estacionarBicicleta("idBicicletaInexistente", "idEstacion");
         });
     }
@@ -97,7 +97,7 @@ public class SistemaBicicletasTest {
 
     @Test
     void testGetBicicletasCerca() {
-        List<Bicicleta> bicicletas = Assertions.assertDoesNotThrow(() -> 
+        List<String> bicicletas = Assertions.assertDoesNotThrow(() -> 
             servicioEstaciones.getBicicletasCerca(0.0, 0.0)
         );
         Assertions.assertNotNull(bicicletas);

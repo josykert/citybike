@@ -28,7 +28,7 @@ public class Bicicleta implements Serializable, Identificable {
     private String motivoBaja;
     private EstadoBicicleta estado;
 
-    @OneToMany(mappedBy = "bicicleta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ElementCollection
     private List<String> historicos;
 
     public Bicicleta() {
@@ -85,7 +85,5 @@ public class Bicicleta implements Serializable, Identificable {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
 				+ ", motivoBaja=" + motivoBaja + ", historicos=" + historicos + "]";
 	}
-	
-
 	
 }
