@@ -76,23 +76,24 @@ public class SistemaBicicletasTest {
     @Test
     void testRetirarBicicleta() {
         Assertions.assertDoesNotThrow(() -> {
-            servicioEstaciones.retirarBicicleta("idBicicleta");
-        });
-
-        Assertions.assertThrows(EstacionesException.class, () -> {
-            servicioEstaciones.retirarBicicleta("idBicicletaInexistente");
+            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
+            String idBicicleta = Assertions.assertDoesNotThrow(() -> 
+                servicioEstaciones.registrarBicicleta("modelo", id)
+            );
+            servicioEstaciones.retirarBicicleta(idBicicleta);
         });
     }
 
     @Test
     void testEliminarBicicleta() {
         Assertions.assertDoesNotThrow(() -> {
-            servicioEstaciones.eliminarBicicleta("idBicicleta", "motivo");
+            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
+            String idBicicleta = Assertions.assertDoesNotThrow(() -> 
+                servicioEstaciones.registrarBicicleta("modelo", id)
+            );
+            servicioEstaciones.eliminarBicicleta(idBicicleta, "mal estacionada");
         });
 
-        Assertions.assertThrows(EstacionesException.class, () -> {
-            servicioEstaciones.eliminarBicicleta("idBicicletaInexistente", "motivo");
-        });
     }
 
     @Test

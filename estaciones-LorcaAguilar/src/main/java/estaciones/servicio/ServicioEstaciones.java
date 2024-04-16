@@ -12,11 +12,13 @@ import estaciones.modelo.Estacion;
 import estaciones.modelo.EstadoBicicleta;
 import estaciones.modelo.Historico;
 import estaciones.modelo.SitioTuristico;
+import estaciones.repositorio.RepositorioHistoricoMongoDB;
 import repositorio.EntidadNoEncontrada;
 import repositorio.EstacionesException;
 import repositorio.FactoriaRepositorios;
 import repositorio.Repositorio;
 import repositorio.RepositorioException;
+import repositorio.RepositorioHistoricoAdhocMongoDB;
 import repositorio.SitiosTuristicosException;
 
 public class ServicioEstaciones implements IServicioEstaciones {
@@ -25,8 +27,9 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	
 	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
 	private Repositorio<Bicicleta, String> repositorioBicicletas = FactoriaRepositorios.getRepositorio(Bicicleta.class);
-	private Repositorio<Historico, String> repositorioHistorico = FactoriaRepositorios.getRepositorio(Historico.class);
 
+	private RepositorioHistoricoAdhocMongoDB repositorioHistorico = new RepositorioHistoricoAdhocMongoDB();
+	
 	@Override
 	public String crear(String nombre, int puestos, String codigoPostal, double latitud, double longitud)
 			throws RepositorioException {
@@ -116,6 +119,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
 		Estacion estacion = repositorio.getById(idEstacion);
 		
+		
 		if (estacion.getPuestos() <= 0) {
 			throw new EstacionesException("La estación no tiene puestos disponibles para aparcar la bicicleta.");
 		}
@@ -188,16 +192,15 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
 		
-		List<String> historicos = bici.getHistorico();
+		List<Historico> historicos = repositorioHistorico.obtenerPorIdBicicleta(idBicicleta);
 		
 		String idEstacionUsada = null;
 		Historico histEliminar = null;
 		
-		for (String x : historicos) {
-			Historico historico = repositorioHistorico.getById(x);
-			if (historico.getFechaSalida() == null) {
-				idEstacionUsada = historico.getIdEstacion();
-				histEliminar = historico;
+		for (Historico x : historicos) {
+			if (x.getFechaSalida() == null) {
+				idEstacionUsada = x.getIdEstacion();
+				histEliminar = x;
 			}
 		}
 		
@@ -216,12 +219,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		hist.setIdEstacion(histEliminar.getIdEstacion());
 		hist.setBicicleta(histEliminar.getBicicleta());
 		
-		List<String> newHistorico = bici.getHistorico();
-		newHistorico.remove(histEliminar.getId());
-		newHistorico.add(hist.getId());
-		bici.setHistorico(newHistorico);
-
-		repositorioHistorico.update(hist);
+		repositorioHistorico.add(hist);
 		repositorioBicicletas.update(bici);
 		repositorio.update(estacionUsada);		
 	}
