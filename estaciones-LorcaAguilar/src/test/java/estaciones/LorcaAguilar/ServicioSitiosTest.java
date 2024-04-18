@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-
+import estaciones.modelo.GeoJsonPoint;
 import estaciones.modelo.SitioTuristico;
 import estaciones.servicio.ResumenSitio;
 import estaciones.servicio.ServicioSitios;
@@ -18,7 +18,8 @@ class ServicioSitiosTest {
     @Test
     void testGetSitiosAndGetInfoSitio() {
         assertDoesNotThrow(() -> {
-            List<ResumenSitio> sitios = servicioSitios.getSitios(40.712776, -3.005974);
+        	GeoJsonPoint location = new GeoJsonPoint(40.712776, -3.005974);
+            List<ResumenSitio> sitios = servicioSitios.getSitios(location);
             System.out.println(sitios);
             assertNotNull(sitios);
             SitioTuristico sitio = servicioSitios.getInfoSitio("Catedral_de_Murcia");
