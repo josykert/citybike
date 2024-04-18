@@ -2,10 +2,17 @@ package estaciones.servicio;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.bson.conversions.Bson;
+
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 
 import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
@@ -17,6 +24,7 @@ import repositorio.EntidadNoEncontrada;
 import repositorio.EstacionesException;
 import repositorio.FactoriaRepositorios;
 import repositorio.Repositorio;
+import repositorio.RepositorioEstacionesAdhocMongoDB;
 import repositorio.RepositorioException;
 import repositorio.RepositorioHistoricoAdhocMongoDB;
 import repositorio.SitiosTuristicosException;
@@ -25,9 +33,9 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	
 	ServicioSitios servicioSitios = new ServicioSitios();
 	
-	private Repositorio<Estacion, String> repositorio = FactoriaRepositorios.getRepositorio(Estacion.class);
 	private Repositorio<Bicicleta, String> repositorioBicicletas = FactoriaRepositorios.getRepositorio(Bicicleta.class);
 
+	private RepositorioEstacionesAdhocMongoDB repositorioEstaciones = new RepositorioEstacionesAdhocMongoDB();
 	private RepositorioHistoricoAdhocMongoDB repositorioHistorico = new RepositorioHistoricoAdhocMongoDB();
 	
 	@Override
@@ -45,7 +53,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 
 		Estacion estacion = new Estacion(nombre, puestos, codigoPostal, latitud, longitud);
 
-		String id = repositorio.add(estacion);
+		String id = repositorioEstaciones.add(estacion);
 
 		return id;
 	}
@@ -57,11 +65,11 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 		
-		Estacion estacion = repositorio.getById(id);
+		Estacion estacion = repositorioEstaciones.getById(id);
 		
 		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 		
-		resumenes = servicioSitios.getSitios(estacion.getLatitud(), estacion.getLongitud());
+		resumenes = servicioSitios.getSitios(estacion.getLocation());
 		
 		List<SitioTuristico> sitios= new LinkedList<SitioTuristico>();
 		
@@ -83,11 +91,11 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 
-		Estacion estacion = repositorio.getById(id);
+		Estacion estacion = repositorioEstaciones.getById(id);
 
 		estacion.setSitios(sitios);
 
-		repositorio.update(estacion);
+		repositorioEstaciones.update(estacion);
 	}
 
 	@Override
@@ -96,7 +104,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		if (id == null || id.isEmpty())
 			throw new IllegalArgumentException("id: no debe ser nulo ni vacio");
 
-		return repositorio.getById(id);
+		return repositorioEstaciones.getById(id);
 	}
 
 
@@ -117,7 +125,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	public void estacionarBicicleta(String idBicicleta, String idEstacion) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
-		Estacion estacion = repositorio.getById(idEstacion);
+		Estacion estacion = repositorioEstaciones.getById(idEstacion);
 		
 		
 		if (estacion.getPuestos() <= 0) {
@@ -129,10 +137,6 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		hist.setIdEstacion(idEstacion);
 		hist.setBicicleta(bici.getId());
 		
-		List<String> newHistorico = bici.getHistorico();
-		newHistorico.add(hist.getId());
-		bici.setHistorico(newHistorico);
-		
 		estacion.setPuestos(estacion.getPuestos() - 1);
 		LinkedList<String> newBicis = estacion.getBicis();
 		newBicis.add(bici.getId());
@@ -140,7 +144,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		repositorioHistorico.add(hist);
 		repositorioBicicletas.update(bici);
-		repositorio.update(estacion);
+		repositorioEstaciones.update(estacion);
 	}
 	
 
@@ -148,14 +152,16 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	public void estacionarBicicleta(String idBicicleta) throws RepositorioException, EntidadNoEncontrada, EstacionesException {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
-		for (String idHistorico : bici.getHistorico()) {
-			Historico historico = repositorioHistorico.getById(idHistorico);
+
+		List<Historico> historicos = repositorioHistorico.obtenerPorIdBicicleta(idBicicleta);
+
+		for (Historico historico : historicos) {
 			if (historico.getFechaSalida() == null) {
 				throw new EstacionesException("La bicicleta ya está aparcada en una estación.");
 			}
 		}
 	
-		List<Estacion> estaciones = repositorio.getAll();
+		List<Estacion> estaciones = repositorioEstaciones.getAll();
 		Estacion estacionLibre = null;
 		for (Estacion estacion : estaciones) {
 			if (estacion.getPuestos() > 0) {
@@ -171,10 +177,6 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		hist.setFechaEstacionamiento(LocalDateTime.now());
 		hist.setIdEstacion(estacionLibre.getId());
 		hist.setBicicleta(bici.getId());
-		
-		List<String> newHistorico = bici.getHistorico();
-		newHistorico.add(hist.getId());
-		bici.setHistorico(newHistorico);
 				
 		estacionLibre.setPuestos(estacionLibre.getPuestos() - 1);
 		LinkedList<String> newBicis = estacionLibre.getBicis();
@@ -183,7 +185,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		repositorioHistorico.add(hist);
 		repositorioBicicletas.update(bici);
-		repositorio.update(estacionLibre);
+		repositorioEstaciones.update(estacionLibre);
 	}
 	
 
@@ -195,33 +197,31 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		List<Historico> historicos = repositorioHistorico.obtenerPorIdBicicleta(idBicicleta);
 		
 		String idEstacionUsada = null;
-		Historico histEliminar = null;
 		
 		for (Historico x : historicos) {
 			if (x.getFechaSalida() == null) {
 				idEstacionUsada = x.getIdEstacion();
-				histEliminar = x;
 			}
 		}
 		
 		if (idEstacionUsada == null)
 			throw new EstacionesException("no hay ninguna estacion que contenga esta bici");
 		
-		Estacion estacionUsada = repositorio.getById(idEstacionUsada);
+		Estacion estacionUsada = repositorioEstaciones.getById(idEstacionUsada);
 		
 		LinkedList<String> newBicis = estacionUsada.getBicis();
 		newBicis.remove(bici.getId());
 		estacionUsada.setBicis(newBicis);
 		
-		Historico hist = new Historico();
-		hist.setFechaSalida(LocalDateTime.now());
-		hist.setFechaEstacionamiento(histEliminar.getFechaEstacionamiento());
-		hist.setIdEstacion(histEliminar.getIdEstacion());
-		hist.setBicicleta(histEliminar.getBicicleta());
-		
-		repositorioHistorico.add(hist);
+		for (Historico hist : historicos) {
+			if (hist.getFechaSalida() == null) {
+				hist.setFechaSalida(LocalDateTime.now());	
+				repositorioHistorico.update(hist);
+			}
+		}
+
 		repositorioBicicletas.update(bici);
-		repositorio.update(estacionUsada);		
+		repositorioEstaciones.update(estacionUsada);		
 	}
 
 
@@ -230,7 +230,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
 		
-		List<Estacion> estaciones = repositorio.getAll();
+		List<Estacion> estaciones = repositorioEstaciones.getAll();
 		
 		Estacion estacionBuscada = null;
 		
@@ -251,69 +251,23 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		bici.setMotivoBaja(motivo);
 		
 		bici.setEstado(EstadoBicicleta.INDISPONIBLE);
+
+		List<Historico> historicos = repositorioHistorico.obtenerPorIdBicicleta(idBicicleta);
+
+		for (Historico hist : historicos) {
+			if (hist.getFechaSalida() == null) {
+				hist.setFechaSalida(LocalDateTime.now());	
+				repositorioHistorico.update(hist);
+			}
+		}
 		
-		Historico hist = new Historico();
-		hist.setFechaSalida(LocalDateTime.now());
-		hist.setIdEstacion(estacionBuscada.getId());
-		hist.setBicicleta(bici.getId());
-		
-		List<String> newHistorico = bici.getHistorico();
-		newHistorico.add(hist.getId());
-		bici.setHistorico(newHistorico);
-		
-		repositorioHistorico.update(hist);
-		repositorio.update(estacionBuscada);
+		repositorioEstaciones.update(estacionBuscada);
 		repositorioBicicletas.update(bici);
 	}
 
 	@Override
-	public List<String> getBicicletasCerca(double latitud, double longitud) throws RepositorioException, EntidadNoEncontrada {
-	    List<Estacion> estaciones = repositorio.getAll();
-
-	    // Ordenar las estaciones por proximidad a las coordenadas dadas
-	    Collections.sort(estaciones, new Comparator<Estacion>() {
-	        @Override
-	        public int compare(Estacion e1, Estacion e2) {
-	            double dist1 = haversine(latitud, longitud, e1.getLatitud(), e1.getLongitud());
-	            double dist2 = haversine(latitud, longitud, e2.getLatitud(), e2.getLongitud());
-	            return Double.compare(dist1, dist2);
-	        }
-	    });
-
-	    // Seleccionar las 3 estaciones más cercanas
-	    List<Estacion> estacionesCercanas = estaciones.subList(0, Math.min(3, estaciones.size()));
-
-	    // Combinar las listas de bicicletas de estas estaciones
-	    List<String> bicicletasCercanas = new LinkedList<>();
-	    for (Estacion estacion : estacionesCercanas) {
-	    	for (String idBici : estacion.getBicis()) {
-	    		Bicicleta bici = repositorioBicicletas.getById(idBici);
-	    		if (bici.getEstado() == EstadoBicicleta.DISPONIBLE) {
-	    			bicicletasCercanas.add(idBici);	    		}
-	    	}
-	    }
-
-	    return bicicletasCercanas;
-	}
-
-	// Método auxiliar para calcular la distancia Haversine
-	private double haversine(double lat1, double lon1, double lat2, double lon2) {
-	    // Radio de la tierra en kilómetros
-	    double R = 6371; 
-	    double dLat = Math.toRadians(lat2 - lat1);
-	    double dLon = Math.toRadians(lon2 - lon1);
-	    lat1 = Math.toRadians(lat1);
-	    lat2 = Math.toRadians(lat2);
-
-	    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-	               Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    return R * c;
-	}
-
-	@Override
 	public List<Estacion> getEstacionesTuristicas() throws RepositorioException {
-	    List<Estacion> estaciones = repositorio.getAll();
+	    List<Estacion> estaciones = repositorioEstaciones.getAll();
 
 	    // Ordenando las estaciones basado en el número de sitios turísticos
 	    Collections.sort(estaciones, new Comparator<Estacion>() {
@@ -325,6 +279,25 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	    });
 
 	    return estaciones;
+	}
+
+
+	@Override
+	public List<String> getBicicletasCerca(double latitud, double longitud)
+			throws RepositorioException, EntidadNoEncontrada {
+		
+		List<Estacion> estacionesCercanas = repositorioEstaciones.findEstacionesCercanas(latitud, longitud);
+		List<String> bicicletasCercanas = new ArrayList<>();
+		
+		for (Estacion estacion : estacionesCercanas) {
+			for (String idBici : estacion.getBicis()) {
+				if (repositorioBicicletas.getById(idBici).getEstado() == EstadoBicicleta.DISPONIBLE) {
+					bicicletasCercanas.add(idBici);
+				}
+			}
+		}
+		
+		return bicicletasCercanas;
 	}
 
 }

@@ -28,13 +28,9 @@ public class Bicicleta implements Serializable, Identificable {
     private String motivoBaja;
     private EstadoBicicleta estado;
 
-    @ElementCollection
-    private List<String> historicos;
-
     public Bicicleta() {
     	this.estado = EstadoBicicleta.DISPONIBLE;
         this.fechaAlta = LocalDate.now();
-        this.historicos = new java.util.ArrayList<>();
     }
     
 	public String getId() {
@@ -74,16 +70,10 @@ public class Bicicleta implements Serializable, Identificable {
 	public void setMotivoBaja(String motivoBaja) {
 		this.motivoBaja = motivoBaja;
 	}
-	public List<String> getHistorico() {
-		return historicos;
-	}
-	public void setHistorico(List<String> historicos) {
-		this.historicos = historicos;
-	}
 	@Override
 	public String toString() {
 		return "Bicicleta [id=" + id + ", modelo=" + modelo + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
-				+ ", motivoBaja=" + motivoBaja + ", historicos=" + historicos + "]";
+				+ ", motivoBaja=" + motivoBaja + "]";
 	}
 	
 }

@@ -18,11 +18,10 @@ public class Estacion implements Identificable{
 	private String nombre;
 	private int puestos;
 	private String codigoPostal;
-	private double latitud;
-	private double longitud;
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
 	private LinkedList<String> bicis;
+    private GeoJsonPoint location;
 
 	public Estacion() {
 		// TODO Auto-generated constructor stub
@@ -32,11 +31,10 @@ public class Estacion implements Identificable{
 		this.nombre = nombre;
 		this.puestos = puestos;
 		this.codigoPostal = codigoPostal;
-		this.latitud = latitud;
-		this.longitud = longitud;
 		this.fechaAlta = LocalDate.now();
 		this.sitios = new LinkedList<SitioTuristico>();
 		this.bicis = new LinkedList<String>();
+		this.location = new GeoJsonPoint(longitud, latitud);
 	}
 
 	public String getId() {
@@ -86,22 +84,14 @@ public class Estacion implements Identificable{
 	public void setSitios(LinkedList<SitioTuristico> sitios) {
 		this.sitios = sitios;
 	}
+	
+    public GeoJsonPoint getLocation() {
+        return location;
+    }
 
-	public double getLatitud() {
-		return latitud;
-	}
-
-	public void setLatitud(double latitud) {
-		this.latitud = latitud;
-	}
-
-	public double getLongitud() {
-		return longitud;
-	}
-
-	public void setLongitud(double longitud) {
-		this.longitud = longitud;
-	}
+    public void setLocation(GeoJsonPoint location) {
+        this.location = location;
+    }
 
 	public LinkedList<String> getBicis() {
 		return bicis;
@@ -111,11 +101,11 @@ public class Estacion implements Identificable{
 		this.bicis = bicis;
 	}
 
-	@Override
-	public String toString() {
-		return "Estacion [id=" + id + ", nombre=" + nombre + ", puestos=" + puestos + ", codigoPostal=" + codigoPostal
-				+ ", latitud=" + latitud + ", longitud=" + longitud + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios
-				+ ", bicis=" + bicis + "]";
-	}
+    @Override
+    public String toString() {
+        return "Estacion [id=" + id + ", nombre=" + nombre + ", puestos=" + puestos + ", codigoPostal=" + codigoPostal
+                + ", latitud=" + getLocation().getCoordinates()[1] + ", longitud=" + getLocation().getCoordinates()[0]
+                + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios + ", bicis=" + bicis + "]";
+    }
 
 }

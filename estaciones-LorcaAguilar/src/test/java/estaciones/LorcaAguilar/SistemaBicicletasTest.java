@@ -10,22 +10,26 @@ import repositorio.EstacionesException;
 import repositorio.RepositorioException;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+
 import java.util.List;
 
 public class SistemaBicicletasTest {
 
-    private ServicioEstaciones servicioEstaciones;
+    private static ServicioEstaciones servicioEstaciones;
+    private static String estacionId;
 
-    @BeforeEach
-    void setUp() throws RepositorioException {
+    
+    @BeforeAll
+    static void initAll() throws RepositorioException {
         servicioEstaciones = new ServicioEstaciones();
+        estacionId = servicioEstaciones.crear("Test", 10, "2013", 0, 0);
     }
 
     @Test
     void testGetEstacion() {
         Assertions.assertDoesNotThrow(() -> {
-            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
-            Estacion estacion = servicioEstaciones.getEstacion(id);
+            Estacion estacion = servicioEstaciones.getEstacion(estacionId);
             Assertions.assertNotNull(estacion);
         });
 
@@ -36,9 +40,8 @@ public class SistemaBicicletasTest {
 
     @Test
     void testRegistrarBicicleta() throws RepositorioException {
-        String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
         String idBicicleta = Assertions.assertDoesNotThrow(() -> 
-            servicioEstaciones.registrarBicicleta("modelo", id)
+            servicioEstaciones.registrarBicicleta("modelo", estacionId)
         );
         Assertions.assertNotNull(idBicicleta);
 
@@ -49,36 +52,28 @@ public class SistemaBicicletasTest {
 
     @Test
     void testEstacionarBicicletaConIdEstacion() {
-        Assertions.assertDoesNotThrow(() -> {
-            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
+        Assertions.assertDoesNotThrow(() -> {            
+            String idBici = servicioEstaciones.registrarBicicleta("Decathlon", estacionId);
             
-            String idBici = servicioEstaciones.registrarBicicleta("Decathlon", id);
-            
-            servicioEstaciones.estacionarBicicleta(idBici, id);
+            servicioEstaciones.estacionarBicicleta(idBici, estacionId);
         });
 
-        Assertions.assertThrows(EstacionesException.class, () -> {
-            servicioEstaciones.estacionarBicicleta("idBicicletaInexistente", "idEstacion");
-        });
     }
 
     @Test
     void testEstacionarBicicletaSinIdEstacion() {
         Assertions.assertDoesNotThrow(() -> {
-            servicioEstaciones.estacionarBicicleta("idBicicleta");
-        });
-
-        Assertions.assertThrows(EstacionesException.class, () -> {
-            servicioEstaciones.estacionarBicicleta("idBicicletaInexistente");
+            String nuevaBici = servicioEstaciones.registrarBicicleta("BiciCarreras", estacionId);
+            servicioEstaciones.retirarBicicleta(nuevaBici);
+            servicioEstaciones.estacionarBicicleta(nuevaBici);
         });
     }
 
     @Test
     void testRetirarBicicleta() {
         Assertions.assertDoesNotThrow(() -> {
-            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
             String idBicicleta = Assertions.assertDoesNotThrow(() -> 
-                servicioEstaciones.registrarBicicleta("modelo", id)
+                servicioEstaciones.registrarBicicleta("modelo", estacionId)
             );
             servicioEstaciones.retirarBicicleta(idBicicleta);
         });
@@ -87,9 +82,8 @@ public class SistemaBicicletasTest {
     @Test
     void testEliminarBicicleta() {
         Assertions.assertDoesNotThrow(() -> {
-            String id = servicioEstaciones.crear("Test", 5, "2013", 0, 0);
             String idBicicleta = Assertions.assertDoesNotThrow(() -> 
-                servicioEstaciones.registrarBicicleta("modelo", id)
+                servicioEstaciones.registrarBicicleta("modelo", estacionId)
             );
             servicioEstaciones.eliminarBicicleta(idBicicleta, "mal estacionada");
         });

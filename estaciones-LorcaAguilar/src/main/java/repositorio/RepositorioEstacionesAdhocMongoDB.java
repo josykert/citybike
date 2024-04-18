@@ -25,19 +25,22 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Indexes;
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
-public abstract class RepositorioMongoDB<T extends Identificable> implements RepositorioString<T> {
-	MongoCollection<T> mongoCollection;
+import estaciones.modelo.Estacion;
 
-	public RepositorioMongoDB() {
+public class RepositorioEstacionesAdhocMongoDB {
+	MongoCollection<Estacion> mongoCollection;
+
+	public RepositorioEstacionesAdhocMongoDB() {
 		mongoCollection = generico();
 	}
 
-	public MongoCollection<T> generico() {
+	public MongoCollection<Estacion> generico() {
 		/**************************************
 		 * MONGODB
 		 ****************************************/
@@ -72,18 +75,17 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 
 		MongoDatabase database = mongoClient.getDatabase(databaseName);
 
-		MongoCollection<T> mongoCollection = obtenerColeccion(database);
-		
-	    mongoCollection.createIndex(Indexes.geo2dsphere("location"));
-	    
+		MongoCollection<Estacion> mongoCollection = obtenerColeccion(database);
 		return mongoCollection;
 	}
 
 
-	public abstract MongoCollection<T> obtenerColeccion(MongoDatabase database);
-
-	@Override
-	public String add(T entity) throws RepositorioException {
+    public MongoCollection<Estacion> obtenerColeccion(MongoDatabase database) {
+        // Obtener la colección de historicos
+        return database.getCollection("historicos", Estacion.class); 
+    }
+    
+	public String add(Estacion entity) throws RepositorioException {
 		InsertOneResult r = mongoCollection.insertOne(entity);
 		BsonValue v = r.getInsertedId();
 		if(v.isNull())
@@ -92,8 +94,7 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		return v.asObjectId().getValue().toHexString();
 	}
 
-	@Override
-	public void update(T entity) throws RepositorioException, EntidadNoEncontrada {
+	public void update(Estacion entity) throws RepositorioException, EntidadNoEncontrada {
 		// Filtro para buscar el documento por su ID
 		ObjectId objectId;
         objectId = new ObjectId(entity.getId());
@@ -106,8 +107,7 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		}
 	}
 
-	@Override
-	public void delete(T entity) throws RepositorioException, EntidadNoEncontrada {
+	public void delete(Estacion entity) throws RepositorioException, EntidadNoEncontrada {
 		// Filtro para buscar el documento por su ID
 		ObjectId objectId;
         objectId = new ObjectId(entity.getId());
@@ -119,8 +119,7 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		}
 	}
 
-	@Override
-	public T getById(String id) throws RepositorioException, EntidadNoEncontrada {
+	public Estacion getById(String id) throws RepositorioException, EntidadNoEncontrada {
 		 // Convertir la cadena de texto 'id' en un ObjectId
 	    ObjectId objectId;
 	    try {
@@ -132,7 +131,7 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		Bson filter = Filters.eq("_id", objectId);
 		// buscar el primer documento que satisfaga el filtro en este caso al buscar por
 		// ID solo deberia haber un match
-		T entity = mongoCollection.find(filter).first();
+		Estacion entity = mongoCollection.find(filter).first();
 		// Si no se encontró el documento, lanzar excepción
 		if (entity == null) {
 			throw new EntidadNoEncontrada("No se encontró el documento con ID: " + id);
@@ -140,16 +139,15 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		return entity;
 	}
 
-	@Override
-	public List<T> getAll() throws RepositorioException {
+	public List<Estacion> getAll() throws RepositorioException {
 		// Lista para almacenar los documentos
-		List<T> entities = new ArrayList<>();
+		List<Estacion> entities = new ArrayList<>();
 		// Obtener un cursor a todos los documentos
-		MongoCursor<T> cursor = mongoCollection.find().iterator();
+		MongoCursor<Estacion> cursor = mongoCollection.find().iterator();
 		try {
 			// Iterar sobre el cursor para obtener cada documento
 			while (cursor.hasNext()) { 
-				T entity = cursor.next();
+				Estacion entity = cursor.next();
 				entities.add(entity);
 			}
 		} finally {
@@ -159,11 +157,31 @@ public abstract class RepositorioMongoDB<T extends Identificable> implements Rep
 		return entities;
 	}
 
-	@Override
 	public List<String> getIds() throws RepositorioException {
 	    // Obtener una lista de los IDs únicos
 	    List<ObjectId> objectIds = mongoCollection.distinct("_id", ObjectId.class).into(new ArrayList<>());
 	    List<String> ids = objectIds.stream().map(ObjectId::toHexString).collect(Collectors.toList());
 	    return ids;
 	}
+	
+	public List<Estacion> obtenerPorIdBicicleta(String idBicicleta) {
+	    // Define el filtro para buscar historicos con el id de la bicicleta
+	    Bson filter = Filters.eq("bicicleta", idBicicleta);
+
+	    // Obtén la colección utilizando el método generico()
+	    MongoCollection<Estacion> collection = generico();
+
+	    // Ejecuta la consulta y almacena el resultado en una lista
+	    List<Estacion> historicos = new ArrayList<>();
+	    collection.find(filter).into(historicos);
+
+	    return historicos;
+	}
+
+	public List<Estacion> findEstacionesCercanas(double latitud, double longitud) {
+	    Point refPoint = new Point(new Position(longitud, latitud));
+	    Bson filter = Filters.near("location", refPoint, null, null);
+	    return mongoCollection.find(filter).limit(3).into(new ArrayList<>());
+	}
+	
 }
