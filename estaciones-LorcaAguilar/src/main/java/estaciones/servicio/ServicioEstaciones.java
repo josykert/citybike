@@ -34,7 +34,6 @@ public class ServicioEstaciones implements IServicioEstaciones {
 	ServicioSitios servicioSitios = new ServicioSitios();
 	
 	private Repositorio<Bicicleta, String> repositorioBicicletas = FactoriaRepositorios.getRepositorio(Bicicleta.class);
-
 	private RepositorioEstacionesAdhocMongoDB repositorioEstaciones = new RepositorioEstacionesAdhocMongoDB();
 	private RepositorioHistoricoAdhocMongoDB repositorioHistorico = new RepositorioHistoricoAdhocMongoDB();
 	
@@ -69,7 +68,7 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 		
-		resumenes = servicioSitios.getSitios(estacion.getLocation());
+		resumenes = servicioSitios.getSitios(estacion.getLongitud(), estacion.getLatitud());
 		
 		List<SitioTuristico> sitios= new LinkedList<SitioTuristico>();
 		

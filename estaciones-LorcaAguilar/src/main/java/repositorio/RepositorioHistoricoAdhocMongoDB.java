@@ -74,6 +74,7 @@ public class RepositorioHistoricoAdhocMongoDB {
 		MongoDatabase database = mongoClient.getDatabase(databaseName);
 
 		MongoCollection<Historico> mongoCollection = obtenerColeccion(database);
+		
 		return mongoCollection;
 	}
 

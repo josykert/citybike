@@ -21,7 +21,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import estaciones.modelo.GeoJsonPoint;
 import estaciones.modelo.SitioTuristico;
 import repositorio.EntidadNoEncontrada;
 import repositorio.FactoriaRepositorios;
@@ -61,12 +60,9 @@ public class ServicioSitios implements IServicioSitios {
     }
 	
 	@Override
-	public List<ResumenSitio> getSitios(GeoJsonPoint location) throws RepositorioException, EntidadNoEncontrada, SitiosTuristicosException {
+	public List<ResumenSitio> getSitios(double latitud, double longitud) throws RepositorioException, EntidadNoEncontrada, SitiosTuristicosException {
 		List<ResumenSitio> resumenes = new LinkedList<ResumenSitio>();
 		
-	    double latitud = location.getCoordinates()[1];
-	    double longitud = location.getCoordinates()[0];
-
 		// 1. Obtener una factoría
 		DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
 

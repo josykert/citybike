@@ -25,6 +25,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Indexes;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 import com.mongodb.client.result.DeleteResult;
@@ -76,13 +77,15 @@ public class RepositorioEstacionesAdhocMongoDB {
 		MongoDatabase database = mongoClient.getDatabase(databaseName);
 
 		MongoCollection<Estacion> mongoCollection = obtenerColeccion(database);
+		
+	    mongoCollection.createIndex(Indexes.geo2dsphere("location"));
 		return mongoCollection;
 	}
 
 
     public MongoCollection<Estacion> obtenerColeccion(MongoDatabase database) {
-        // Obtener la colección de historicos
-        return database.getCollection("historicos", Estacion.class); 
+        // Obtener la colección de estaciones
+        return database.getCollection("estaciones", Estacion.class); 
     }
     
 	public String add(Estacion entity) throws RepositorioException {
@@ -163,20 +166,7 @@ public class RepositorioEstacionesAdhocMongoDB {
 	    List<String> ids = objectIds.stream().map(ObjectId::toHexString).collect(Collectors.toList());
 	    return ids;
 	}
-	
-	public List<Estacion> obtenerPorIdBicicleta(String idBicicleta) {
-	    // Define el filtro para buscar historicos con el id de la bicicleta
-	    Bson filter = Filters.eq("bicicleta", idBicicleta);
 
-	    // Obtén la colección utilizando el método generico()
-	    MongoCollection<Estacion> collection = generico();
-
-	    // Ejecuta la consulta y almacena el resultado en una lista
-	    List<Estacion> historicos = new ArrayList<>();
-	    collection.find(filter).into(historicos);
-
-	    return historicos;
-	}
 
 	public List<Estacion> findEstacionesCercanas(double latitud, double longitud) {
 	    Point refPoint = new Point(new Position(longitud, latitud));

@@ -10,6 +10,10 @@ import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
 import repositorio.Identificable;
 
+/**
+ * @author pablo
+ *
+ */
 public class Estacion implements Identificable{
 	
 	@BsonId
@@ -21,21 +25,23 @@ public class Estacion implements Identificable{
 	private LocalDate fechaAlta;
 	private LinkedList<SitioTuristico> sitios;
 	private LinkedList<String> bicis;
-    private GeoJsonPoint location;
+    private double latitud;
+    private double longitud;
 
 	public Estacion() {
 		// TODO Auto-generated constructor stub
-	}
+	}    
 	
-	public Estacion(String nombre, int puestos, String codigoPostal, double latitud, double longitud) {
-		this.nombre = nombre;
-		this.puestos = puestos;
-		this.codigoPostal = codigoPostal;
-		this.fechaAlta = LocalDate.now();
-		this.sitios = new LinkedList<SitioTuristico>();
-		this.bicis = new LinkedList<String>();
-		this.location = new GeoJsonPoint(longitud, latitud);
-	}
+    public Estacion(String nombre, int puestos, String codigoPostal, double latitud, double longitud) {
+        this.nombre = nombre;
+        this.puestos = puestos;
+        this.codigoPostal = codigoPostal;
+        this.fechaAlta = LocalDate.now();
+        this.sitios = new LinkedList<SitioTuristico>();
+        this.bicis = new LinkedList<String>();
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
 
 	public String getId() {
 		return id;
@@ -84,14 +90,6 @@ public class Estacion implements Identificable{
 	public void setSitios(LinkedList<SitioTuristico> sitios) {
 		this.sitios = sitios;
 	}
-	
-    public GeoJsonPoint getLocation() {
-        return location;
-    }
-
-    public void setLocation(GeoJsonPoint location) {
-        this.location = location;
-    }
 
 	public LinkedList<String> getBicis() {
 		return bicis;
@@ -101,10 +99,27 @@ public class Estacion implements Identificable{
 		this.bicis = bicis;
 	}
 
-    @Override
+	
+    public double getLatitud() {
+		return latitud;
+	}
+
+	public void setLatitud(double latitud) {
+		this.latitud = latitud;
+	}
+
+	public double getLongitud() {
+		return longitud;
+	}
+
+	public void setLongitud(double longitud) {
+		this.longitud = longitud;
+	}
+
+	@Override
     public String toString() {
         return "Estacion [id=" + id + ", nombre=" + nombre + ", puestos=" + puestos + ", codigoPostal=" + codigoPostal
-                + ", latitud=" + getLocation().getCoordinates()[1] + ", longitud=" + getLocation().getCoordinates()[0]
+                + ", latitud=" + latitud + ", longitud=" + longitud
                 + ", fechaAlta=" + fechaAlta + ", sitios=" + sitios + ", bicis=" + bicis + "]";
     }
 
