@@ -4,7 +4,10 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
+import dto.EstacionDTO;
+import dto.IncidenciaDTO;
 import estaciones.modelo.Bicicleta;
+import estaciones.modelo.Estacion;
 import estaciones.modelo.EstadoBicicleta;
 import estaciones.modelo.EstadoIncidencia;
 import estaciones.modelo.Incidencia;
@@ -42,6 +45,11 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		
 		repositorioBicicleta.update(bici);
 		return repositorioIncidencias.add(incidencia);
+	}
+	
+	@Override
+	public Incidencia getIncidencia(String idIncidencia) throws RepositorioException, EntidadNoEncontrada {
+		return repositorioIncidencias.getById(idIncidencia);
 	}
 
 	@Override
@@ -109,5 +117,24 @@ public class ServicioIncidencias implements IServicioIncidencias{
 			throw new IncidenciasException("no hay ninguna estacion que contenga esta bici");
 		}
 	}
+	
+	private IncidenciaDTO transformToDTO(Incidencia incidencia) {
+		return new IncidenciaDTO(incidencia.getId(), incidencia.getFechaCreacion(), incidencia.getIdBicicleta(), incidencia.getEstado());
+	}
+
+	@Override
+	public IncidenciaDTO getById(String idIncidencia) throws IncidenciasException {
+		try {
+			Incidencia incidencia = getIncidencia(idIncidencia);
+			return transformToDTO(incidencia);
+		} catch (RepositorioException e) {
+			e.printStackTrace();
+			throw new IncidenciasException(e.getMessage(), e);
+		} catch (EntidadNoEncontrada e) {
+			e.printStackTrace();
+			throw new IncidenciasException(e.getMessage(), e);
+		}
+	}
+	
 
 }

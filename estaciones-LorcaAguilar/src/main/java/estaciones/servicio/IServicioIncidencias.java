@@ -2,6 +2,7 @@ package estaciones.servicio;
 
 import java.util.List;
 
+import dto.IncidenciaDTO;
 import estaciones.modelo.Incidencia;
 import repositorio.EntidadNoEncontrada;
 import repositorio.EstacionesException;
@@ -19,4 +20,8 @@ public interface IServicioIncidencias {
 	void resolverIncidencia(String idIncidencia, boolean reparada) throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException;
 	
 	List<Incidencia> getIncidenciasAbiertas() throws RepositorioException;
+
+	IncidenciaDTO getById(String idIncidencia) throws IncidenciasException;
+
+	Incidencia getIncidencia(String idIncidencia) throws RepositorioException, EntidadNoEncontrada;
 }

@@ -14,6 +14,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
+import dto.EstacionDTO;
 import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
 import estaciones.modelo.EstadoBicicleta;
@@ -298,5 +299,24 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		
 		return bicicletasCercanas;
 	}
+	
+	private EstacionDTO transformToDTO(Estacion estacion) {
+		return new EstacionDTO(estacion.getId(), estacion.getNombre(), estacion.getPuestos(),
+				estacion.getCodigoPostal(), estacion.getLatitud(), estacion.getLongitud());
+	}
 
+	@Override
+	public EstacionDTO getById(String idEstacion) throws EstacionesException {
+		try {
+			Estacion estacion = getEstacion(idEstacion);
+			return transformToDTO(estacion);
+		} catch (RepositorioException e) {
+			e.printStackTrace();
+			throw new EstacionesException(e.getMessage(), e);
+		} catch (EntidadNoEncontrada e) {
+			e.printStackTrace();
+			throw new EstacionesException(e.getMessage(), e);
+		}
+	}
+	
 }
