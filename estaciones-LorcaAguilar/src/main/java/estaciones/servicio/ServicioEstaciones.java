@@ -14,6 +14,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
+import dto.BicicletaDTO;
 import dto.EstacionDTO;
 import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
@@ -317,6 +318,25 @@ public class ServicioEstaciones implements IServicioEstaciones {
 			e.printStackTrace();
 			throw new EstacionesException(e.getMessage(), e);
 		}
+	}
+	
+	@Override
+	public BicicletaDTO getBicicletaDTO(String idBicicleta) throws RepositorioException, EntidadNoEncontrada {
+		Bicicleta bici = repositorioBicicletas.getById(idBicicleta);
+        BicicletaDTO bicidto = new BicicletaDTO(bici.getId(), bici.getModelo(), bici.getEstado());
+		return bicidto;
+	}
+	
+	@Override
+	public List<BicicletaDTO> getBicisDTO() throws RepositorioException {
+		List<BicicletaDTO> bicisDTO = new LinkedList<BicicletaDTO>();
+		for (Bicicleta bici : repositorioBicicletas.getAll()) {
+			if (bici.getEstado() == EstadoBicicleta.DISPONIBLE) {
+		        BicicletaDTO bicidto = new BicicletaDTO(bici.getId(), bici.getModelo(), bici.getEstado());
+				bicisDTO.add(bicidto);
+			}
+		}
+		return bicisDTO;
 	}
 	
 }

@@ -3,6 +3,7 @@ package estaciones.servicio;
 import java.util.LinkedList;
 import java.util.List;
 
+import dto.BicicletaDTO;
 import dto.EstacionDTO;
 import estaciones.modelo.Bicicleta;
 import estaciones.modelo.Estacion;
@@ -37,5 +38,9 @@ public interface IServicioEstaciones {
 	List<Estacion> getEstacionesTuristicas() throws RepositorioException;
 
 	EstacionDTO getById(String idEstacion) throws EstacionesException;
+
+	BicicletaDTO getBicicletaDTO(String idBicicleta) throws RepositorioException, EntidadNoEncontrada;
+
+	List<BicicletaDTO> getBicisDTO() throws RepositorioException;
 
 }

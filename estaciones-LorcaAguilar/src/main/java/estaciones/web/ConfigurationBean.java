@@ -1,4 +1,4 @@
-package web;
+package estaciones.web;
 
 import java.io.Serializable;
 
