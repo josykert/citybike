@@ -24,4 +24,6 @@ public interface IServicioIncidencias {
 	IncidenciaDTO getById(String idIncidencia) throws IncidenciasException;
 
 	Incidencia getIncidencia(String idIncidencia) throws RepositorioException, EntidadNoEncontrada;
+	
+	List<IncidenciaDTO> getIncidenciasAbiertasDTO() throws RepositorioException;
 }

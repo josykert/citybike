@@ -135,6 +135,21 @@ public class ServicioIncidencias implements IServicioIncidencias{
 			throw new IncidenciasException(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public List<IncidenciaDTO> getIncidenciasAbiertasDTO() throws RepositorioException {
+		
+		List<IncidenciaDTO> incidenciasAbiertasDTO = new LinkedList<IncidenciaDTO>();
+		
+		List<Incidencia> incidenciasAbiertas = this.getIncidenciasAbiertas();
+		
+		for(Incidencia i: incidenciasAbiertas) {
+			IncidenciaDTO dto = this.transformToDTO(i);
+			incidenciasAbiertasDTO.add(dto);
+		}
+		
+		return incidenciasAbiertasDTO;
+	}
 	
 
 }

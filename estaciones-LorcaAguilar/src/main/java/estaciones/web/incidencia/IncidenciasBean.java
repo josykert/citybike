@@ -23,18 +23,13 @@ import repositorio.RepositorioException;
 public class IncidenciasBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private LinkedList<IncidenciaDTO> incidencias;
+	private List<IncidenciaDTO> incidencias;
 
-	private ServicioIncidencias servicio;
+	private ServicioIncidencias servicio = new ServicioIncidencias();
 
 	public IncidenciasBean() throws RepositorioException, IncidenciasException{
 		
-		List<Incidencia> incidenciasAbiertas = servicio.getIncidenciasAbiertas();
-
-		for(Incidencia i: incidenciasAbiertas) {
-			IncidenciaDTO dto = servicio.getById(i.getId());
-			this.incidencias.add(dto);
-		}
+		this.incidencias = servicio.getIncidenciasAbiertasDTO();	
 		
 	}
 	
@@ -53,11 +48,11 @@ public class IncidenciasBean implements Serializable {
 		
 	}
 
-	public LinkedList<IncidenciaDTO> getIncidencias() {
+	public List<IncidenciaDTO> getIncidencias() {
 		return incidencias;
 	}
 
-	public void setIncidencias(LinkedList<IncidenciaDTO> incidencias) {
+	public void setIncidencias(List<IncidenciaDTO> incidencias) {
 		this.incidencias = incidencias;
 	}
 }
