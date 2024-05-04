@@ -8,7 +8,7 @@
 	<f:metadata>
 		<f:viewParam name="idIncidencia"
 			value="#{incidenciaDetailBean.idIncidencia}" />
-		<f:event type="preRenderView" listener="#{incidenciaDetailBean.init}" />
+		<f:event type="preRenderView" listener="#{incidenciaDetailBean.inicializar}" />
 	</f:metadata>
 
 	<ui:define name="title">
@@ -40,10 +40,10 @@
 							<br />
 							<p:commandButton value="#{text['resolver']}"
 								style="margin-left: 1.5em"
-								oncomplete="PF('widgetDialogResolverIncidencia').show();" />
+								oncomplete="PF('widgetDialogoResolverIncidencia').show();" />
 						</h:form>
 					</div>
-					<p:dialog id="dialogRes" widgetVar="widgetDialogRes"
+					<p:dialog id="dialogRes" widgetVar="widgetDialogoResolver"
 						closable="true">
 						<h:form style="width: 500px;">
 							<div class="container">

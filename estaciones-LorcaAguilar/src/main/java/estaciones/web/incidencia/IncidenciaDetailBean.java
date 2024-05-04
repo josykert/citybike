@@ -35,7 +35,7 @@ public class IncidenciaDetailBean implements Serializable{
 
 	private IServicioIncidencias servicio = new ServicioIncidencias();
 
-	public void init() throws IncidenciasException {
+	public void inicializar() throws IncidenciasException {
 
 		incidenciadto = servicio.getById(idIncidencia);
 
@@ -44,7 +44,7 @@ public class IncidenciaDetailBean implements Serializable{
 	public boolean asignarIncidencia()
 			throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException, IOException {
 		if (nombreOperador == null || nombreOperador == "") {
-			PrimeFaces.current().executeScript("PF('widgetErrorDialogAsig').show()");
+			PrimeFaces.current().executeScript("PF('widgetErrorDialogoAsignar').show()");
 			return false;
 		}
 		servicio.asignarIncidencia(incidenciadto.getId(), nombreOperador);
@@ -56,7 +56,7 @@ public class IncidenciaDetailBean implements Serializable{
 	public boolean cancelarIncidencia()
 			throws EntidadNoEncontrada, RepositorioException, IncidenciasException, IOException {
 		if (motivo == null || motivo == "") {
-			PrimeFaces.current().executeScript("PF('widgetErrorDialogCan').show()");
+			PrimeFaces.current().executeScript("PF('widgetErrorDialogoCancelar').show()");
 			return false;
 		}
 		servicio.cancelarIncidencia(incidenciadto.getId());

@@ -8,11 +8,11 @@
 	<f:metadata>
 		<f:viewParam name="idIncidencia"
 			value="#{incidenciaDetailBean.idIncidencia}" />
-		<f:event type="preRenderView" listener="#{incidenciaDetailBean.init}" />
+		<f:event type="preRenderView" listener="#{incidenciaDetailBean.inicializar}" />
 	</f:metadata>
 
 	<ui:define name="title">
-		 #{text['gestionIns']}
+		 #{text['gestionarIncidencias']}
 	</ui:define>
 
 	<ui:define name="content">
@@ -23,7 +23,7 @@
 						<div class="col-12">
 							<header class="first major">
 								<h2>
-									<h:outputText value="#{text['gestionIn']}" />
+									<h:outputText value="#{text['gestionarIncidencia']}" />
 								</h2>
 							</header>
 						</div>
@@ -33,10 +33,9 @@
 						style="display: flex; justify-content: center; align-items: center;">
 						<h:form>
 							<p:panel
-								header="#{text['in']}: #{incidenciaDetailBean.incidencia.id}">
+								header="#{text['incidencia']}: #{incidenciaDetailBean.incidencia.id}">
 								<h3>#{incidenciaDetailBean.incidencia.estado}</h3>
-								<h4>#{incidenciaDetailBean.incidencia.fechaFormato}</h4>
-								<p>#{incidenciaDetailBean.incidencia.descripcion}</p>
+								<h4>#{incidenciaDetailBean.incidencia.fechaCreacion}</h4>
 							</p:panel>
 							<br />
 						</h:form>
@@ -44,82 +43,82 @@
 					<br /> <br />
 					<div class="container">
 						<p:commandButton value="#{text['asignar']}"
-							oncomplete="PF('widgetDialogAsig').show();"
+							oncomplete="PF('widgetDialogoAsignar').show();"
 							style="margin-left: 29em" />
 						<p:commandButton value="#{text['cancelar']}"
-							oncomplete="PF('widgetDialogCan').show();"
+							oncomplete="PF('widgetDialogoCancelar').show();"
 							style="margin-left: 4em" />
 					</div>
-					<p:dialog id="dialogAsig" widgetVar="widgetDialogAsig"
+					<p:dialog id="dialogoAsignar" widgetVar="widgetDialogoAsignar"
 						closable="true">
 						<h:form style="width: 500px;">
 							<div class="container">
 
 								<h2 style="text-align: center;">
-									<h:outputText value="#{text['asignarIn']}" />
+									<h:outputText value="#{text['asignarIncidencia']}" />
 								</h2>
 								<p>
-									<h:outputText value="#{text['nomOp']}" />
-									<h:inputText value="#{incidenciaDetailBean.nombreOperador}"
-										placeholder="#{text['obligao']}" />
+									<h:outputText value="#{text['nombreOperario']}" />
+									<h:inputText value="#{incidenciaDetailBean.nombreOperario}"
+										placeholder="#{text['obligatorio']}" />
 								</p>
 								<br />
 								<p:commandButton value="#{text['asignar']}"
-									onclick="PF('widgetDialogAsig').hide();"
+									onclick="PF('widgetDialogoAsignar').hide();"
 									action="#{incidenciaDetailBean.asignarIncidencia}"
 									style="display: block; margin: 0 auto" />
 							</div>
 						</h:form>
 					</p:dialog>
-					<p:dialog id="errorDialogAsig" widgetVar="widgetErrorDialogAsig"
+					<p:dialog id="errorDialogoAsignar" widgetVar="widgetErrorDialogoAsignar"
 						closable="false">
 						<h:form>
 							<h2 style="text-align: center;">
 								<h:outputText value="Error" />
 							</h2>
-							<h:outputText value="#{text['nomOpOb']}" />
+							<h:outputText value="#{text['asignarError']}" />
 							<br />
 							<br />
 
 							<p:commandButton value="#{text['cerrar']}"
-								onclick="PF('widgetErrorDialogRes').hide();"
+								onclick="PF('widgetErrorDialogoResolver').hide();"
 								style="display: block; margin: 0 auto"
 								styleClass="ui-button-danger" />
 						</h:form>
 					</p:dialog>
-					<p:dialog id="dialogCan" widgetVar="widgetDialogCan"
+					<p:dialog id="dialogoCancelar" widgetVar="widgetDialogoCancelar"
 						closable="true">
 						<h:form style="width: 500px;">
 							<div class="container">
 
 								<h2 style="text-align: center;">
-									<h:outputText value="#{text['cancelarIn']}" />
+									<h:outputText value="#{text['cancelarIncidencia']}" />
 								</h2>
 								<p>
 									<h:outputText value="#{text['motivo']}" />
 									<h:inputText value="#{incidenciaDetailBean.motivo}"
-										placeholder="#{text['obligao']}" />
+										placeholder="#{text['obligatorio']}" />
 								</p>
 								<br />
-								<p:commandButton value="#{text['cancelarIn']}"
-									onclick="PF('widgetDialogRes').hide();"
+								<p:commandButton value="#{text['cancelarIncidencia']}"
+									onclick="PF('widgetDialogoResolver').hide();"
 									action="#{incidenciaDetailBean.cancelarIncidencia}"
 									style="display: block; margin: 0 auto" />
 							</div>
 						</h:form>
 					</p:dialog>
-					<p:dialog id="errorDialogCan" widgetVar="widgetErrorDialogCan"
+					<p:dialog id="errorDialogoCancelar" widgetVar="widgetErrorDialogoCancelar"
 						closable="false">
 						<h:form>
 							<h2 style="text-align: center;">
 								<h:outputText value="Error" />
 							</h2>
-							<h:outputText value="El motivo es un campo obligatorio" />
+							<h:outputText value="#{text['motivoError']}" />
 							<br />
 							<br />
 
-							<p:commandButton value="#{text['motivoOb']}"
-								onclick="PF('widgetErrorDialogRes').hide();"
+							<p:commandButton value="#{text['motivoError']}"
+								onclick="PF('widgetErrorDialogoResolver').hide();"
 								style="display: block; margin: 0 auto"
 								styleClass="ui-button-danger" />
 						</h:form>

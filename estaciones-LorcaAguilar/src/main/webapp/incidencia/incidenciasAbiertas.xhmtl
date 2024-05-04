@@ -19,7 +19,7 @@
 						<div class="col-12">
 							<header class="first major">
 								<h2>
-									<h:outputText value="#{text['incidenciaAbierta']}" />
+									<h:outputText value="#{text['incidenciaAbiertas']}" />
 								</h2>
 							</header>
 						</div>
@@ -39,8 +39,6 @@
 											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['bici']}</th>
 										<th
 											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['gestionar']}</th>
-										<!-- Nueva columna para el botón -->
-
 									</tr>
 								</thead>
 								<tbody>
@@ -57,7 +55,7 @@
 												<!-- Enlace a la nueva página con el ID de la incidencia como parámetro -->
 												<p:commandButton icon="pi pi-pencil"
 													styleClass="rounded-button ui-button-secondary"
-													action="#{incidenciasBean.irADetail}">
+													action="#{incidenciasBean.goToDetail}">
 													<f:param name="idIncidencia" value="#{incidenciadto.id}" />
 												</p:commandButton>
 											</td>
