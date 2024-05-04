@@ -63,14 +63,14 @@ public class CrearIncidenciaBean implements Serializable {
 			header = resourceBundle.getString("creada");
 			message = resourceBundle.getString("creadaCorrecto");
 			setClase("ui-button-info");
-			PrimeFaces.current().ajax().update("dialogoCI");
+			PrimeFaces.current().ajax().update("dialogoCrearIncidencia");
 			actualizar();
 			return true;
 		} else {
 			header = "ERROR";
 			message = resourceBundle.getString("creadaMal");
 			setClase("ui-button-danger");
-			PrimeFaces.current().ajax().update("dialogoCI");
+			PrimeFaces.current().ajax().update("dialogoCrearIncidencia");
 			actualizar();
 			return false;
 		}
