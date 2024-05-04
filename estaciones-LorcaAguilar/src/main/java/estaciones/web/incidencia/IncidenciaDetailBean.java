@@ -69,7 +69,7 @@ public class IncidenciaDetailBean implements Serializable{
 	public boolean resolverIncidencia()
 			throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException, IOException {
 		if (motivo == null || motivo == "") {
-			PrimeFaces.current().executeScript("PF('widgetErrorDialogRes').show()");
+			PrimeFaces.current().executeScript("PF('widgetErrorDialogoResolverIncidencia').show()");
 			return false;
 		}
 

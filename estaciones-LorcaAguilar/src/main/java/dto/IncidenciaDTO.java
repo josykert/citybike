@@ -12,7 +12,7 @@ public class IncidenciaDTO {
 	private String idBicicleta;
 	private EstadoIncidencia estado;
 	
-	public IncidenciaDTO(String id, LocalDate fechaCreacion, String idBicicleta, EstadoIncidencia estado ) {
+	public IncidenciaDTO(String id, LocalDate fechaCreacion, String idBicicleta, EstadoIncidencia estado) {
 		this.id = id;
 		this.fechaCreacion = fechaCreacion;
 		this.idBicicleta = idBicicleta;
@@ -50,5 +50,6 @@ public class IncidenciaDTO {
 	public void setEstado(EstadoIncidencia estado) {
 		this.estado = estado;
 	}
+	
 
 }

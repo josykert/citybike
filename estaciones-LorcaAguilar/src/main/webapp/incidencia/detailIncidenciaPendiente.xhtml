@@ -1,0 +1,131 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="idIncidencia"
+			value="#{incidenciaDetailBean.idIncidencia}" />
+		<f:event type="preRenderView" listener="#{incidenciaDetailBean.init}" />
+	</f:metadata>
+
+	<ui:define name="title">
+		 #{text['gestionIns']}
+	</ui:define>
+
+	<ui:define name="content">
+		<div id="main-wrapper">
+			<div class="wrapper style1">
+				<div class="inner">
+					<section class="container box feature1">
+						<div class="col-12">
+							<header class="first major">
+								<h2>
+									<h:outputText value="#{text['gestionIn']}" />
+								</h2>
+							</header>
+						</div>
+
+					</section>
+					<div
+						style="display: flex; justify-content: center; align-items: center;">
+						<h:form>
+							<p:panel
+								header="#{text['in']}: #{incidenciaDetailBean.incidencia.id}">
+								<h3>#{incidenciaDetailBean.incidencia.estado}</h3>
+								<h4>#{incidenciaDetailBean.incidencia.fechaFormato}</h4>
+								<p>#{incidenciaDetailBean.incidencia.descripcion}</p>
+							</p:panel>
+							<br />
+						</h:form>
+					</div>
+					<br /> <br />
+					<div class="container">
+						<p:commandButton value="#{text['asignar']}"
+							oncomplete="PF('widgetDialogAsig').show();"
+							style="margin-left: 29em" />
+						<p:commandButton value="#{text['cancelar']}"
+							oncomplete="PF('widgetDialogCan').show();"
+							style="margin-left: 4em" />
+					</div>
+					<p:dialog id="dialogAsig" widgetVar="widgetDialogAsig"
+						closable="true">
+						<h:form style="width: 500px;">
+							<div class="container">
+
+								<h2 style="text-align: center;">
+									<h:outputText value="#{text['asignarIn']}" />
+								</h2>
+								<p>
+									<h:outputText value="#{text['nomOp']}" />
+									<h:inputText value="#{incidenciaDetailBean.nombreOperador}"
+										placeholder="#{text['obligao']}" />
+								</p>
+								<br />
+								<p:commandButton value="#{text['asignar']}"
+									onclick="PF('widgetDialogAsig').hide();"
+									action="#{incidenciaDetailBean.asignarIncidencia}"
+									style="display: block; margin: 0 auto" />
+							</div>
+						</h:form>
+					</p:dialog>
+					<p:dialog id="errorDialogAsig" widgetVar="widgetErrorDialogAsig"
+						closable="false">
+						<h:form>
+							<h2 style="text-align: center;">
+								<h:outputText value="Error" />
+							</h2>
+							<h:outputText value="#{text['nomOpOb']}" />
+							<br />
+							<br />
+
+							<p:commandButton value="#{text['cerrar']}"
+								onclick="PF('widgetErrorDialogRes').hide();"
+								style="display: block; margin: 0 auto"
+								styleClass="ui-button-danger" />
+						</h:form>
+					</p:dialog>
+					<p:dialog id="dialogCan" widgetVar="widgetDialogCan"
+						closable="true">
+						<h:form style="width: 500px;">
+							<div class="container">
+
+								<h2 style="text-align: center;">
+									<h:outputText value="#{text['cancelarIn']}" />
+								</h2>
+								<p>
+									<h:outputText value="#{text['motivo']}" />
+									<h:inputText value="#{incidenciaDetailBean.motivo}"
+										placeholder="#{text['obligao']}" />
+								</p>
+								<br />
+								<p:commandButton value="#{text['cancelarIn']}"
+									onclick="PF('widgetDialogRes').hide();"
+									action="#{incidenciaDetailBean.cancelarIncidencia}"
+									style="display: block; margin: 0 auto" />
+							</div>
+						</h:form>
+					</p:dialog>
+					<p:dialog id="errorDialogCan" widgetVar="widgetErrorDialogCan"
+						closable="false">
+						<h:form>
+							<h2 style="text-align: center;">
+								<h:outputText value="Error" />
+							</h2>
+							<h:outputText value="El motivo es un campo obligatorio" />
+							<br />
+							<br />
+
+							<p:commandButton value="#{text['motivoOb']}"
+								onclick="PF('widgetErrorDialogRes').hide();"
+								style="display: block; margin: 0 auto"
+								styleClass="ui-button-danger" />
+						</h:form>
+					</p:dialog>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
