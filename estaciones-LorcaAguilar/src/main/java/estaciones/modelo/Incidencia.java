@@ -14,6 +14,7 @@ public class Incidencia implements Identificable{
 	private String id;
 	private LocalDate fechaCreacion;
 	private LocalDate fechaCierre;
+	private String descripcion;
 	private String idBicicleta;
 	private String nombreOperario;
 	private EstadoIncidencia estado;
@@ -53,6 +54,12 @@ public class Incidencia implements Identificable{
 	}
 	public void setNombreOperario(String nombreOperario) {
 		this.nombreOperario = nombreOperario;
+	}
+	public String getDescripcion() {
+		return descripcion;
+	}
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 	
 }

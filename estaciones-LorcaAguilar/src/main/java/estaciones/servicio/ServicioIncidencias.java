@@ -39,6 +39,7 @@ public class ServicioIncidencias implements IServicioIncidencias{
         bici.setEstado(EstadoBicicleta.INDISPONIBLE);
         
 		Incidencia incidencia = new Incidencia();
+		incidencia.setDescripcion(descripcion);
 		incidencia.setEstado(EstadoIncidencia.PENDIENTE);
 		incidencia.setFechaCreacion(LocalDate.now());
 		incidencia.setIdBicicleta(idBicicleta);
