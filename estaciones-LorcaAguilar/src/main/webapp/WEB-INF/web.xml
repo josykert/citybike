@@ -10,45 +10,6 @@
 	</welcome-file-list>
 
 	<servlet>
-		<description></description>
-		<display-name>ServletRegistro</display-name>
-		<servlet-name>ServletRegistro</servlet-name>
-		<servlet-class>servlets.ServletRegistro</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ServletRegistro</servlet-name>
-		<url-pattern>/ServletRegistro</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description></description>
-		<display-name>ServletLogin</display-name>
-		<servlet-name>ServletLogin</servlet-name>
-		<servlet-class>servlets.ServletLogin</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ServletLogin</servlet-name>
-		<url-pattern>/ServletLogin</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<description></description>
-		<display-name>ServletCookie</display-name>
-		<servlet-name>ServletCookie</servlet-name>
-		<servlet-class>servlets.ServletCookie</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>ServletCookie</servlet-name>
-		<url-pattern>/ServletCookie</url-pattern>
-	</servlet-mapping>
-	<filter>
-		<display-name>LogRegistros</display-name>
-		<filter-name>LogRegistros</filter-name>
-		<filter-class>servlets.LogRegistros</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>LogRegistros</filter-name>
-		<url-pattern>/ServletRegistro</url-pattern>
-	</filter-mapping>
-	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>

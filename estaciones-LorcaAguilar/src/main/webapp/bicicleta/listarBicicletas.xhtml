@@ -1,0 +1,76 @@
+<ui:composition template="/WEB-INF/template/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="title">
+		#{text['listarBicicletas']}	
+	</ui:define>
+
+	<ui:param name="estilo2" value="current_page_item" />
+
+	<ui:define name="content">
+		<div id="main-wrapper">
+			<div class="wrapper style1">
+				<div class="inner">
+					<section class="container box feature1">
+						<div class="col-12">
+							<header class="first major">
+								<h2>
+									<h:outputText value="#{text['buscarBicis']}" />
+								</h2>
+							</header>
+						</div>
+						<h:form>
+							<p:outputLabel value="#{text['ubi']}" style="font-size: 1.4em" />
+							<div class="container" style="width: 500px">
+								<div class="row">
+
+									<p>
+										<p:outputLabel value="#{text['lat']}:" />
+										<p:inputText value="#{buscadorBicicletasBean.lat}" />
+									</p>
+
+									<p>
+										<p:outputLabel value="#{text['lng']}:" />
+										<p:inputText value="#{buscadorBicicletasBean.lng}" />
+									</p>
+									<p:commandButton icon="pi pi-search" value="#{text['buscar']}"
+										action="#{buscadorBicicletasBean.buscarBicicletasCercanas}"
+										update="@form"
+										style="display: block; margin-left: 9.5em; margin-right: 0" />
+									<p:commandButton icon="pi pi-eraser" value="#{text['limpiar']}"
+										action="#{buscadorBicicletasBean.limpiar}" update="@form"
+										style="display: block; margin-right: auto;margin-left: 2em" />
+								</div>
+							</div>
+							<br />
+							<br />
+							<table class="default">
+								<thead>
+									<tr>
+										<th style="text-align: center; font-size: 1.3em; font-weight: 500">Id</th>
+										<th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['modelo']}</th>
+										<th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['estacion']}</th>
+									</tr>
+								</thead>
+								<tbody>
+									<ui:repeat value="#{buscadorBicicletasBean.bicisCercanas}"
+										var="bici">
+										<tr>
+											<td><strong><h:outputText value="#{bici.id}" /></strong></td>
+											<td><h:outputText value="#{bici.modelo}" /></td>
+											<td><h:outputText value="#{bici.nombreEstacion}" /></td>
+										</tr>
+									</ui:repeat>
+								</tbody>
+							</table>
+						</h:form>
+					</section>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
