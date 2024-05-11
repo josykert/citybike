@@ -45,6 +45,7 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		incidencia.setIdBicicleta(idBicicleta);
 		
 		repositorioBicicleta.update(bici);
+		System.out.println("Añadiendo incidencia");
 		return repositorioIncidencias.add(incidencia);
 	}
 	

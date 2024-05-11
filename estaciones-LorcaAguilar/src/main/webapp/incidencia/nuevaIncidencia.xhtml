@@ -32,23 +32,23 @@
 										<p:outputLabel for="biciMenu" value="Bici"
 											style="font-weight: bold;"/>
 										<h:selectOneMenu id="biciMenu"
-											value="#{CrearIncidenciaBean.idBici}" var="b"
-											style="width: 360px; height: 35px;">
+											value="#{crearIncidenciaBean.idBici}" var="b"
+											style="width: 360px; height: 75px;">
 											<f:selectItem itemLabel="#{text['obligatorio']}" itemValue="" />
-											<f:selectItems value="#{CrearIncidenciaBean.bicis}"
+											<f:selectItems value="#{crearIncidenciaBean.bicis}"
 												var="bici" itemLabel="Id: #{bici.id} #{text['modelo']}: #{bici.modelo}"
 												itemValue="#{bici.id}" />
 										</h:selectOneMenu>
 									</p>
 									<p>
 										<p:outputLabel value="#{text['descripcion']}" style="font-weight: bold;" />
-										<p:inputText value="#{CrearIncidenciaBean.descripcion}"
-											style="width: 90%; padding: 8px; font-size: 1.1em;" placeholder="#{text['obligatorio']}" />
+										<p:inputText value="#{crearIncidenciaBean.descripcion}"
+											style="width: 240%; height: 75px;padding: 8px; font-size: 1.1em;" placeholder="#{text['obligatorio']}" />
 									</p>
 								</div>
 
-								<p:commandButton style="display: block; margin: 1em auto; font-size: 1.2em; padding: 10px 20px;"
-									value="#{text['crear']}" action="#{CrearIncidenciaBean.crearIncidencia}"
+								<p:commandButton style="display: block; margin: 1em auto; font-size: 2.2em; padding: 10px 20px;"
+									value="#{text['crear']}" action="#{crearIncidenciaBean.crearIncidencia}"
 									icon="pi pi-plus-circle" iconPos="right" update="@form"
 									oncomplete="PF('widgetDialogCrearIncidencia').show();" />
 							</div>
