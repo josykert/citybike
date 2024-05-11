@@ -6,6 +6,8 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<f:metadata>
+        <f:event type="preRenderView" listener="#{usuarioBean.checkAccessGestor}" />
+	
 		<f:viewParam name="idIncidencia"
 			value="#{incidenciaDetailBean.idIncidencia}" />
 		<f:event type="preRenderView" listener="#{incidenciaDetailBean.inicializar}" />
