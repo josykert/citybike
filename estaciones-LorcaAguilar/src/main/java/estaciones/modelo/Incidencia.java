@@ -1,6 +1,7 @@
 package estaciones.modelo;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import repositorio.Identificable;
 public class Incidencia implements Identificable{
 
 	@Id
-	private String id;
+	private String id = UUID.randomUUID().toString();
 	private LocalDate fechaCreacion;
 	private LocalDate fechaCierre;
 	private String descripcion;

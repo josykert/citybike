@@ -6,23 +6,26 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import dto.BicicletaDTO;
-
 import org.primefaces.PrimeFaces;
 
-import estaciones.servicio.ServicioEstaciones;
 import estaciones.servicio.ServicioIncidencias;
-import estaciones.web.locale.ActiveLocale;
 import repositorio.EntidadNoEncontrada;
+import repositorio.EstacionesException;
 import repositorio.IncidenciasException;
 import repositorio.RepositorioException;
 
+import dto.BicicletaDTO;
+
+import estaciones.servicio.ServicioEstaciones;
+
+import estaciones.web.locale.ActiveLocale;
+
 @Named
-@SessionScoped
+@ViewScoped
 public class CrearIncidenciaBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,6 +47,7 @@ public class CrearIncidenciaBean implements Serializable {
     private ResourceBundle resourceBundle;
 
 	public CrearIncidenciaBean() {
+		System.out.println("Estoy funcionando\n---------------\n---------------\n---------------\n");
 		actualizar();
 	}
 
@@ -78,6 +82,19 @@ public class CrearIncidenciaBean implements Serializable {
 
 	private void actualizar() {
 		try {
+			String idEstacion = servicioEstaciones.crear("Catedral", 4, "30001", 37.98, -1.12);
+			try {
+				servicioEstaciones.registrarBicicleta("BMX", idEstacion);
+				servicioEstaciones.registrarBicicleta("BMX3", idEstacion);
+				servicioEstaciones.registrarBicicleta("BMX2", idEstacion);
+			} catch (EntidadNoEncontrada e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (EstacionesException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			bicicletas = servicioEstaciones.getBicisDTO();
 		} catch (RepositorioException e) {
 			e.printStackTrace();

@@ -49,7 +49,7 @@ public class IncidenciaDetailBean implements Serializable{
 		}
 		servicio.asignarIncidencia(incidenciadto.getId(), nombreOperador);
 		nombreOperador = null;
-		FacesContext.getCurrentInstance().getExternalContext().redirect("incidencias.xhtml");
+		FacesContext.getCurrentInstance().getExternalContext().redirect("incidenciasAbiertas.xhtml");
 		return true;
 	}
 
