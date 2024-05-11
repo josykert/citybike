@@ -20,7 +20,7 @@ public class BicicletasBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<BicicletaDTO> bicisSeleccionadas;
+	private List<BicicletaDTO> bicisSeleccionadas = new LinkedList<>();
 	private double latitud;
 	private double longitud;
 	
@@ -30,12 +30,19 @@ public class BicicletasBean implements Serializable {
 	}
 	
 	public void buscarBicicletasCerca() throws RepositorioException, EntidadNoEncontrada {
-		List<String> idBicisCercanas = servicio.getBicicletasCerca(latitud, longitud);
+		List<String> idBicisSeleccionadas = servicio.getBicicletasCerca(latitud, longitud);
 		bicisSeleccionadas = new LinkedList<BicicletaDTO>();
-		for (String idBici : idBicisCercanas) {
+		for (String idBici : idBicisSeleccionadas) {
 			bicisSeleccionadas.add(servicio.getBicicletaDTO(idBici));
 		}
     }
+	
+	public void clean() {
+		bicisSeleccionadas = new LinkedList<BicicletaDTO>();
+		latitud = 0;
+		longitud = 0;
+    }
+
 	
 	public double getLatitud() {
 		return latitud;
@@ -53,7 +60,7 @@ public class BicicletasBean implements Serializable {
 		this.longitud = longitud;
 	}
 
-	public List<BicicletaDTO> getBicisCercanas() {
+	public List<BicicletaDTO> getBicisSeleccionadas() {
 		return bicisSeleccionadas;
 	}
 

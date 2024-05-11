@@ -12,8 +12,8 @@
 	<ui:param name="estilo3" value="current_page_item" />
 
 	<ui:define name="content">
-		<div id="main-wrapper" style="background-color: #f8f9fa;">
-			<div class="wrapper style1" style="padding: 20px; border: 1px solid #dee2e6;">
+		<div id="main-wrapper">
+			<div class="wrapper style1">
 				<div class="inner">
 					<section class="container box feature1">
 						<div class="col-12">
@@ -24,16 +24,16 @@
 							</header>
 						</div>
 						<h:form>
-							<p:outputLabel value="#{text['creaIncidencia']}"
+							<p:outputLabel for="biciMenu" value="#{text['creaIncidencia']}"
 								style="font-size: 1.5em; font-weight: bold;" />
-							<div class="container" style="padding: 15px;">
+							<div class="container">
 								<div class="row">
 									<p>
 										<p:outputLabel for="biciMenu" value="Bici"
 											style="font-weight: bold;"/>
 										<h:selectOneMenu id="biciMenu"
 											value="#{crearIncidenciaBean.idBici}" var="b"
-											style="width: 360px; height: 75px;">
+											style="width: 100%; height: auto;">
 											<f:selectItem itemLabel="#{text['obligatorio']}" itemValue="" />
 											<f:selectItems value="#{crearIncidenciaBean.bicis}"
 												var="bici" itemLabel="Id: #{bici.id} #{text['modelo']}: #{bici.modelo}"
@@ -41,21 +41,20 @@
 										</h:selectOneMenu>
 									</p>
 									<p>
-										<p:outputLabel value="#{text['descripcion']}" style="font-weight: bold;" />
-										<p:inputText value="#{crearIncidenciaBean.descripcion}"
-											style="width: 240%; height: 75px;padding: 8px; font-size: 1.1em;" placeholder="#{text['obligatorio']}" />
+										<p:outputLabel for="descripcion" value="#{text['descripcion']}" style="font-weight: bold;" />
+										<p:inputText id="descripcion" value="#{crearIncidenciaBean.descripcion}"
+											style="width: 100%; height: auto;" placeholder="#{text['obligatorio']}" />
 									</p>
 								</div>
 
-								<p:commandButton style="display: block; margin: 1em auto; font-size: 2.2em; padding: 10px 20px;"
-									value="#{text['crear']}" action="#{crearIncidenciaBean.crearIncidencia}"
+								<p:commandButton value="#{text['crear']}" action="#{crearIncidenciaBean.crearIncidencia}"
 									icon="pi pi-plus-circle" iconPos="right" update="@form"
-									oncomplete="PF('widgetDialogCrearIncidencia').show();" />
+									style="margin-top: 10px; width: auto; height: auto;" />
 							</div>
 							<br />
 						</h:form>
 						<p:dialog id="dialogoCrearIncidencia" widgetVar="widgetDialogCrearIncidencia" closable="true"
-								  style="min-width: 400px; border-radius: 8px; padding: 20px;">
+								  style="min-width: 400px; border-radius: 8px;">
 							<h:form>
 								<h2 style="text-align: center; font-size: 1.5em;">
 									<h:outputText value="#{CrearIncidenciaBean.header}" />
@@ -65,7 +64,7 @@
 
 								<p:commandButton value="#{text['cerrar']}"
 									onclick="PF('widgetDialogCrearIncidencia').hide();"
-									style="display: block; margin: 0 auto; padding: 10px 20px; font-size: 1.2em;" update="@form"
+									style="margin: 0 auto; display: block; padding: 10px 20px; font-size: 1.2em;" update="@form"
 									styleClass="#{CrearIncidenciaBean.clase}" />
 							</h:form>
 						</p:dialog>

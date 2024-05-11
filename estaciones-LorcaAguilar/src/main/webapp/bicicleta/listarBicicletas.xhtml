@@ -19,30 +19,30 @@
 						<div class="col-12">
 							<header class="first major">
 								<h2>
-									<h:outputText value="#{text['buscarBicis']}" />
+									<h:outputText value="#{text['listarBicicletas']}" />
 								</h2>
 							</header>
 						</div>
 						<h:form>
-							<p:outputLabel value="#{text['ubi']}" style="font-size: 1.4em" />
+							<p:outputLabel value="#{text['ubicacion']}" style="font-size: 1.4em" />
 							<div class="container" style="width: 500px">
 								<div class="row">
 
 									<p>
 										<p:outputLabel value="#{text['lat']}:" />
-										<p:inputText value="#{buscadorBicicletasBean.lat}" />
+										<p:inputText value="#{bicicletasBean.latitud}" />
 									</p>
 
 									<p>
 										<p:outputLabel value="#{text['lng']}:" />
-										<p:inputText value="#{buscadorBicicletasBean.lng}" />
+										<p:inputText value="#{bicicletasBean.longitud}" />
 									</p>
 									<p:commandButton icon="pi pi-search" value="#{text['buscar']}"
-										action="#{buscadorBicicletasBean.buscarBicicletasCercanas}"
+										action="#{bicicletasBean.buscarBicicletasCerca}"
 										update="@form"
 										style="display: block; margin-left: 9.5em; margin-right: 0" />
-									<p:commandButton icon="pi pi-eraser" value="#{text['limpiar']}"
-										action="#{buscadorBicicletasBean.limpiar}" update="@form"
+									<p:commandButton icon="pi pi-eraser" value="#{text['clean']}"
+										action="#{bicicletasBean.clean}" update="@form"
 										style="display: block; margin-right: auto;margin-left: 2em" />
 								</div>
 							</div>
@@ -57,12 +57,12 @@
 									</tr>
 								</thead>
 								<tbody>
-									<ui:repeat value="#{buscadorBicicletasBean.bicisCercanas}"
-										var="bici">
+									<ui:repeat value="#{bicicletasBean.bicisSeleccionadas}"
+										var="bicicleta">
 										<tr>
-											<td><strong><h:outputText value="#{bici.id}" /></strong></td>
-											<td><h:outputText value="#{bici.modelo}" /></td>
-											<td><h:outputText value="#{bici.nombreEstacion}" /></td>
+											<td><strong><h:outputText value="#{bicicleta.id}" /></strong></td>
+											<td><h:outputText value="#{bicicleta.modelo}" /></td>
+											<td><h:outputText value="#{bicicleta.estado}" /></td>
 										</tr>
 									</ui:repeat>
 								</tbody>
