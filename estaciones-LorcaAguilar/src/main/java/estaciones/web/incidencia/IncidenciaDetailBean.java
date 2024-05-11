@@ -61,7 +61,7 @@ public class IncidenciaDetailBean implements Serializable{
 		}
 		servicio.cancelarIncidencia(incidenciadto.getId());
 		motivo = null;
-		FacesContext.getCurrentInstance().getExternalContext().redirect("incidencias.xhtml");
+		FacesContext.getCurrentInstance().getExternalContext().redirect("incidenciasAbiertas.xhtml");
 		return true;
 
 	}
@@ -75,7 +75,7 @@ public class IncidenciaDetailBean implements Serializable{
 
 		servicio.resolverIncidencia(incidenciadto.getId(), reparada);
 		motivo = null;
-		FacesContext.getCurrentInstance().getExternalContext().redirect("incidencias.xhtml");
+		FacesContext.getCurrentInstance().getExternalContext().redirect("incidenciasAbiertas.xhtml");
 		return true;
 
 	}

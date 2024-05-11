@@ -234,8 +234,13 @@ public class ServicioEstaciones implements IServicioEstaciones {
 		List<Estacion> estaciones = repositorioEstaciones.getAll();
 		
 		Estacion estacionBuscada = null;
-		
+		System.out.println("idBiciOficial: "+bici.getId());
 		for (Estacion estacion : estaciones) {
+			System.out.println(estacion.getNombre());
+			System.out.println("Bicis: ");
+			for(String idebici: estacion.getBicis()) {
+				System.out.println("   Bici: "+ idebici);
+			}
 			if (estacion.getBicis().contains(bici.getId())) {
 				estacionBuscada = estacion;
 			}
