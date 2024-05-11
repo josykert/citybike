@@ -111,6 +111,7 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		        repositorioBicicleta.update(bici);
 			}
 			else {
+				servicioEstaciones.estacionarBicicleta(i.getIdBicicleta());
 				servicioEstaciones.eliminarBicicleta(i.getIdBicicleta(), "No ha podido ser reparada");
 			}
 			repositorioIncidencias.update(i);
