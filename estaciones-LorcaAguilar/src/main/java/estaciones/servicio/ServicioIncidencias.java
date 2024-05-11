@@ -45,7 +45,6 @@ public class ServicioIncidencias implements IServicioIncidencias{
 		incidencia.setIdBicicleta(idBicicleta);
 		
 		repositorioBicicleta.update(bici);
-		System.out.println("Añadiendo incidencia");
 		return repositorioIncidencias.add(incidencia);
 	}
 	
@@ -103,12 +102,12 @@ public class ServicioIncidencias implements IServicioIncidencias{
 			throws EntidadNoEncontrada, RepositorioException, IncidenciasException, EstacionesException {
 		
 		Incidencia i = repositorioIncidencias.getById(idIncidencia);
-		if (i.getEstado() == EstadoIncidencia.PENDIENTE) {
+		if (i.getEstado() == EstadoIncidencia.ASIGNADA) {
 			i.setEstado(EstadoIncidencia.RESUELTA);
 			if(reparada) {
 		        Bicicleta bici = repositorioBicicleta.getById(i.getIdBicicleta());
 		        bici.setEstado(EstadoBicicleta.DISPONIBLE);
-				servicioEstaciones.estacionarBicicleta(idIncidencia);
+				servicioEstaciones.estacionarBicicleta(bici.getId());
 		        repositorioBicicleta.update(bici);
 			}
 			else {

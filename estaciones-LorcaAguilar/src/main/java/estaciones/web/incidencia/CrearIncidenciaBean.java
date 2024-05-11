@@ -47,7 +47,6 @@ public class CrearIncidenciaBean implements Serializable {
     private ResourceBundle resourceBundle;
 
 	public CrearIncidenciaBean() {
-		System.out.println("Estoy funcionando\n---------------\n---------------\n---------------\n");
 		actualizar();
 	}
 
@@ -65,7 +64,7 @@ public class CrearIncidenciaBean implements Serializable {
 		
 		if (id != null) {
 			header = resourceBundle.getString("creada");
-			message = resourceBundle.getString("creadaCorrecto");
+			message = resourceBundle.getString("creadaCorrectamente");
 			setClase("ui-button-info");
 			PrimeFaces.current().ajax().update("dialogoCrearIncidencia");
 			actualizar();
@@ -82,19 +81,6 @@ public class CrearIncidenciaBean implements Serializable {
 
 	private void actualizar() {
 		try {
-			String idEstacion = servicioEstaciones.crear("Catedral", 4, "30001", 37.98, -1.12);
-			try {
-				servicioEstaciones.registrarBicicleta("BMX", idEstacion);
-				servicioEstaciones.registrarBicicleta("BMX3", idEstacion);
-				servicioEstaciones.registrarBicicleta("BMX2", idEstacion);
-			} catch (EntidadNoEncontrada e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (EstacionesException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
 			bicicletas = servicioEstaciones.getBicisDTO();
 		} catch (RepositorioException e) {
 			e.printStackTrace();
