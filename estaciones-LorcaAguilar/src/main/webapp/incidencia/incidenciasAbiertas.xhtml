@@ -1,72 +1,65 @@
 <ui:composition template="/WEB-INF/template/template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-	xmlns:h="http://xmlns.jcp.org/jsf/html"
-	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="title">
-		#{text['incidencias']}
-	</ui:define>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{usuarioBean.checkAccess}" />
+    </f:metadata>
 
-	<ui:param name="estilo4" value="current_page_item" />
+    <ui:define name="title">
+        #{text['incidencias']}
+    </ui:define>
 
-	<ui:define name="content">
-		<div id="main-wrapper">
-			<div class="wrapper style1">
-				<div class="inner">
-					<section class="container box feature1">
-						<div class="col-12">
-							<header class="first major">
-								<h2>
-									<h:outputText value="#{text['incidenciaAbiertas']}" />
-								</h2>
-							</header>
-						</div>
-						<h:form>
-							<br />
-							<br />
-							<table class="default">
-								<thead>
-									<tr>
-										<th
-											style="text-align: center; font-size: 1.3em; font-weight: 500">Id</th>
-										<th
-											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['estado']}</th>
-										<th
-											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['fecha']}</th>
-										<th
-											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['bici']}</th>
-										<th
-											style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['gestionar']}</th>
-									</tr>
-								</thead>
-								<tbody>
-									<ui:repeat
-										value="#{incidenciasBean.incidencias}"
-										var="incidenciadto">
-										<tr>
-											<td><strong><h:outputText
-														value="#{incidenciadto.id}" /></strong></td>
-											<td><h:outputText value="#{incidenciadto.estado}" /></td>
-											<td><h:outputText value="#{incidenciadto.fechaCreacion}" /></td>
-											<td><h:outputText value="#{incidenciadto.idBicicleta}" /></td>
-											<td>
-												<!-- Enlace a la nueva página con el ID de la incidencia como parámetro -->
-												<p:commandButton icon="pi pi-pencil"
-													styleClass="rounded-button ui-button-secondary"
-													action="#{incidenciasBean.goToDetail}">
-													<f:param name="idIncidencia" value="#{incidenciadto.id}" />
-												</p:commandButton>
-											</td>
-										</tr>
-									</ui:repeat>
-								</tbody>
-							</table>
-						</h:form>
-					</section>
-				</div>
-			</div>
-		</div>
-	</ui:define>
+    <ui:param name="estilo4" value="current_page_item" />
+
+    <ui:define name="content">
+        <div id="main-wrapper">
+            <div class="wrapper style1">
+                <div class="inner">
+                    <section class="container box feature1">
+                        <div class="col-12">
+                            <header class="first major">
+                                <h2>
+                                    <h:outputText value="#{text['incidenciaAbiertas']}" />
+                                </h2>
+                            </header>
+                        </div>
+                        <h:form>
+                            <br />
+                            <br />
+                            <table class="default">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; font-size: 1.3em; font-weight: 500">Id</th>
+                                        <th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['estado']}</th>
+                                        <th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['fecha']}</th>
+                                        <th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['bici']}</th>
+                                        <th style="text-align: center; font-size: 1.3em; font-weight: 500">#{text['gestionar']}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ui:repeat value="#{incidenciasBean.incidencias}" var="incidenciadto">
+                                        <tr>
+                                            <td><strong><h:outputText value="#{incidenciadto.id}" /></strong></td>
+                                            <td><h:outputText value="#{incidenciadto.estado}" /></td>
+                                            <td><h:outputText value="#{incidenciadto.fechaCreacion}" /></td>
+                                            <td><h:outputText value="#{incidenciadto.idBicicleta}" /></td>
+                                            <td>
+                                                <p:commandButton icon="pi pi-pencil" styleClass="rounded-button ui-button-secondary" action="#{incidenciasBean.goToDetail}">
+                                                    <f:param name="idIncidencia" value="#{incidenciadto.id}" />
+                                                </p:commandButton>
+                                            </td>
+                                        </tr>
+                                    </ui:repeat>
+                                </tbody>
+                            </table>
+                        </h:form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </ui:define>
 </ui:composition>
