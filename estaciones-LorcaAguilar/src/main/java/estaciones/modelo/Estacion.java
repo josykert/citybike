@@ -8,6 +8,9 @@ import org.bson.BsonType;
 import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
+import com.mongodb.client.model.geojson.Point;
+import com.mongodb.client.model.geojson.Position;
+
 import repositorio.Identificable;
 
 /**
@@ -27,6 +30,7 @@ public class Estacion implements Identificable{
 	private LinkedList<String> bicis;
     private double latitud;
     private double longitud;
+    private Point location;
 
 	public Estacion() {
 		// TODO Auto-generated constructor stub
@@ -41,7 +45,16 @@ public class Estacion implements Identificable{
         this.bicis = new LinkedList<String>();
         this.latitud = latitud;
         this.longitud = longitud;
+        this.location = new Point(new Position(longitud, latitud));
     }
+
+	public Point getLocation() {
+		return location;
+	}
+
+	public void setLocation(Point location) {
+		this.location = location;
+	}
 
 	public String getId() {
 		return id;

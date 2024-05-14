@@ -33,6 +33,7 @@ public class BicicletasBean implements Serializable {
 		List<String> idBicisSeleccionadas = servicio.getBicicletasCerca(latitud, longitud);
 		bicisSeleccionadas = new LinkedList<BicicletaDTO>();
 		for (String idBici : idBicisSeleccionadas) {
+			System.out.println("Bici: "+idBici);
 			bicisSeleccionadas.add(servicio.getBicicletaDTO(idBici));
 		}
     }
